@@ -38,7 +38,6 @@ public class AlumnoForm extends javax.swing.JFrame {
         initComponents();
         modeloTable = (DefaultTableModel) this.tablaAlumno.getModel();
         CargarAlumno();
-        //llenarCombo();
         NEncargado.ComboEncargado(cbEncargado);
     }
 
@@ -58,8 +57,7 @@ public class AlumnoForm extends javax.swing.JFrame {
                 fecha = ListA.get(i).getFechaNac();
                 String fechaTexto = formatter.format(fecha);
                 modeloTable.setValueAt(fechaTexto, i,3);
-                modeloTable.setValueAt(ListA.get(i).getIdEncargado().getNombre()+" "+ListA.get(i).getIdEncargado().getApellido(), i, 4); 
-                
+                modeloTable.setValueAt(ListA.get(i).getIdEncargado().getNombre()+" "+ListA.get(i).getIdEncargado().getApellido(), i, 4);   
             }
 
         } catch (Exception e) {
