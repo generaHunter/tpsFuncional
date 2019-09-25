@@ -7,10 +7,13 @@ package Presentacion;
 
 import Datos.AlumnoJpaController;
 import Datos.EncargadoJpaController;
+import Datos.exceptions.IllegalOrphanException;
+import Datos.exceptions.NonexistentEntityException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import Logica_Negocio.Encargado;
 import Logica_Negocio.Alumno;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,13 +35,16 @@ public class AlumnoForm extends javax.swing.JFrame {
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
     EncargadoJpaController CEncargado= new EncargadoJpaController();
     DefaultComboBoxModel modelCombo = new DefaultComboBoxModel();
-   Encargado NEncargado = new Encargado();        
+    Encargado NEncargado = new Encargado();  
+    Alumno AlumnoEdit;
     
     public AlumnoForm() {
         initComponents();
         modeloTable = (DefaultTableModel) this.tablaAlumno.getModel();
         CargarAlumno();
         NEncargado.ComboEncargado(cbEncargado);
+        this.btnUpdate.setEnabled(false);
+        this.btnDelete.setEnabled(false);
     }
 
      public void CargarAlumno() {
@@ -57,7 +63,8 @@ public class AlumnoForm extends javax.swing.JFrame {
                 fecha = ListA.get(i).getFechaNac();
                 String fechaTexto = formatter.format(fecha);
                 modeloTable.setValueAt(fechaTexto, i,3);
-                modeloTable.setValueAt(ListA.get(i).getIdEncargado().getNombre()+" "+ListA.get(i).getIdEncargado().getApellido(), i, 4);   
+                modeloTable.setValueAt(ListA.get(i).getIdEncargado().getNombre()+" "+ListA.get(i).getIdEncargado().getApellido(), i, 4);
+                modeloTable.setValueAt(ListA.get(i).getIdEncargado().getIdEncargado().toString(), i, 5);
             }
 
         } catch (Exception e) {
@@ -160,29 +167,30 @@ public class AlumnoForm extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(176, 176, 176)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(230, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(52, 52, 52)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(176, 176, 176)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel5))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(27, 27, 27)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                    .addComponent(txtApellido, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                    .addComponent(cbEncargado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtFechaNac))
-                .addGap(28, 164, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(52, 52, 52)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel5))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(27, 27, 27)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                            .addComponent(txtApellido, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                            .addComponent(cbEncargado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtFechaNac))))
+                .addContainerGap(164, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -229,6 +237,11 @@ public class AlumnoForm extends javax.swing.JFrame {
         });
 
         btnUpdate.setText("Actualizar Alumno");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -265,15 +278,20 @@ public class AlumnoForm extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nombre", "Apellido", "Fecha_nac", "Encargado"
+                "ID", "Nombre", "Apellido", "Fecha_nac", "Encargado", "ID Encargado"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tablaAlumno.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaAlumnoMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(tablaAlumno);
@@ -326,9 +344,6 @@ public class AlumnoForm extends javax.swing.JFrame {
         } catch (Exception ex) {
            JOptionPane.showMessageDialog(null, ex);
         }
-             
-       
-      
     }//GEN-LAST:event_btNuevoActionPerformed
 
     private void txtFechaNacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaNacActionPerformed
@@ -337,7 +352,91 @@ public class AlumnoForm extends javax.swing.JFrame {
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
+                int indice = this.tablaAlumno.getSelectedRow();
+
+        try {
+            BigDecimal bigDecimalValue = new BigDecimal(modeloTable.getValueAt(indice, 0).toString());
+            int opcion = JOptionPane.showConfirmDialog(null, "Está seguro que desea eliminar al alumno "+bigDecimalValue.toString(), "Eliminar Alumno", JOptionPane.YES_NO_OPTION);
+            if (opcion == 0) {
+                CAlumno.destroy(bigDecimalValue);
+                this.CargarAlumno();
+                this.btnDelete.setEnabled(false);
+                this.btnUpdate.setEnabled(false);
+                this.btNuevo.setEnabled(true);
+            }
+            else
+            {
+                this.btNuevo.setEnabled(true);
+                this.btnUpdate.setEnabled(false);
+                this.btnDelete.setEnabled(false);
+                this.limpiar();
+            }
+            
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(usuariosForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void tablaAlumnoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaAlumnoMouseClicked
+         try {  
+                int indice = this.tablaAlumno.getSelectedRow();
+                if (indice > -1) 
+                {
+                       txtNombre.setText(modeloTable.getValueAt(indice, 1).toString());
+                       txtApellido.setText(modeloTable.getValueAt(indice, 2).toString());
+                       txtFechaNac.setText(modeloTable.getValueAt(indice, 3).toString());
+                       AlumnoEdit = (Alumno) tablaAlumno.getValueAt(tablaAlumno.getSelectedRow(), 0);
+                       this.btnUpdate.setEnabled(true);
+                       this.btnDelete.setEnabled(true);
+                       this.btNuevo.setEnabled(false);
+                       //this.cbEncargado.setSelectedItem((modeloTable.getValueAt(indice, 4)));
+                }
+         } catch (Exception e) 
+            {
+                
+            }
+    }//GEN-LAST:event_tablaAlumnoMouseClicked
+
+    public void limpiar()
+    {
+        this.txtNombre.setText("");
+        this.txtFechaNac.setText("");
+        this.txtApellido.setText("");
+    }
+    
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+        try {
+                int opcion = JOptionPane.showConfirmDialog(null, "Está seguro que desea actualizar al alumno", "Actualizar Alumno", JOptionPane.YES_NO_OPTION);
+                if (opcion == 0) 
+                {
+                    AlumnoEdit.setNombre(txtNombre.getText());
+                    AlumnoEdit.setApellido(txtApellido.getText());
+                    AlumnoEdit.setFechaNac(formatter.parse(txtFechaNac.getText()));  
+                    NEncargado.setIdEncargado(cbEncargado.getItemAt(cbEncargado.getSelectedIndex()).getIdEncargado());
+                    AlumnoEdit.setIdEncargado(NEncargado);
+                    CAlumno.edit(AlumnoEdit);
+                    CargarAlumno();
+                    this.btnUpdate.setEnabled(false);
+                    this.btnDelete.setEnabled(false);
+                    this.btNuevo.setEnabled(true);
+                    this.limpiar();
+                }
+                else
+                {
+                    this.btNuevo.setEnabled(true);
+                    this.btnUpdate.setEnabled(false);
+                    this.btnDelete.setEnabled(false);
+                    this.limpiar();
+                }
+                
+            } catch (Exception e)     
+             {
+
+               JOptionPane.showMessageDialog(null, e);
+             }
+    }//GEN-LAST:event_btnUpdateActionPerformed
 
     /**
      * @param args the command line arguments

@@ -505,6 +505,7 @@ public class usuariosForm extends javax.swing.JFrame {
                 this.CargarUsuario();
                 this.LimpearCampos();
             }
+            
 
         } catch (IllegalOrphanException ex) {
             Logger.getLogger(usuariosForm.class.getName()).log(Level.SEVERE, null, ex);
