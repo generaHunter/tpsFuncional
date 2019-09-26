@@ -361,9 +361,9 @@ public class EncargadoForm extends javax.swing.JFrame {
         
           int indice = this.tableEncargado.getSelectedRow();
            btnActualizar.setEnabled(true);
-            EncargadoEdit = (Encargado) tableEncargado.getValueAt(tableEncargado.getSelectedRow(), 0);
-            JOptionPane.showMessageDialog(null, EncargadoEdit.getIdEncargado());
+         
         if (indice > -1) {
+           EncargadoEdit = (Encargado) tableEncargado.getValueAt(tableEncargado.getSelectedRow(), 0);
             try {
                 updateUser = true;
                 txtNombre.setText(modeloTable.getValueAt(indice, 2).toString());
