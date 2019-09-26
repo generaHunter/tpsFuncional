@@ -107,7 +107,7 @@ public class TelefonoUsuario implements Serializable {
 
     @Override
     public String toString() {
-        return "Logica_Negocio.TelefonoUsuario[ idTelefono=" + idTelefono + " ]";
+        return  idTelefono.toString();
     }
     
 }
