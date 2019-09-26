@@ -5,6 +5,7 @@
  */
 package Presentacion;
 
+import Datos.TelefonoUsuarioJpaController;
 import Datos.TipoUsuarioJpaController;
 import Datos.UsuarioGradoJpaController;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import Datos.UsuarioJpaController;
 import Datos.exceptions.IllegalOrphanException;
 import Datos.exceptions.NonexistentEntityException;
+import Logica_Negocio.TelefonoUsuario;
 import Logica_Negocio.TipoUsuario;
 import Logica_Negocio.Usuario;
 import com.sun.org.apache.xerces.internal.impl.dv.xs.DecimalDV;
@@ -35,7 +37,10 @@ public class usuariosForm extends javax.swing.JFrame {
     ArrayList<Usuario> lUsuarios;
     DefaultComboBoxModel modelCombo = new DefaultComboBoxModel();
     UsuarioJpaController CUsuarios = new UsuarioJpaController();
+    TelefonoUsuarioJpaController CTelUsuarios = new TelefonoUsuarioJpaController();
     TipoUsuarioJpaController CTipoU = new TipoUsuarioJpaController();
+    Usuario usuario = new Usuario();
+    TelefonoUsuario Telefonousuario = new TelefonoUsuario();
 
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -80,7 +85,7 @@ public class usuariosForm extends javax.swing.JFrame {
             Date fecha;
 
             List<Usuario> ListP = CUsuarios.findUsuarioEntities();           
-
+            List<TelefonoUsuario> ListTel = CTelUsuarios.findTelefonoUsuarioEntities(); 
             for (int i = 0; i < ListP.size(); i++) {
 
                 modeloTable.addRow(o);
@@ -99,8 +104,18 @@ public class usuariosForm extends javax.swing.JFrame {
                 modeloTable.setValueAt(fechaTexto, i, 6);
                 modeloTable.setValueAt(ListP.get(i).getDui(), i, 7);
                 modeloTable.setValueAt(ListP.get(i).getPass(), i, 8);
-            }
+                
+                
+                for (int j = 0; j < ListTel.size(); j++) {   
+                    if(modeloTable.getValueAt(i, 1).toString().equals(ListTel.get(j).getIdUsuario().getIdUsuario().toString()))
+                    {
+                        modeloTable.setValueAt(ListTel.get(j).getTelefono(), i, 9); 
+                    }
+                }
 
+            }
+            
+        
         } catch (Exception e) {
         }
 
@@ -139,6 +154,7 @@ public class usuariosForm extends javax.swing.JFrame {
         btEliminar = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
+        txtTelefono = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaUsuarios = new javax.swing.JTable();
@@ -311,10 +327,6 @@ public class usuariosForm extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(187, 187, 187)
-                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(0, 110, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -323,6 +335,15 @@ public class usuariosForm extends javax.swing.JFrame {
                     .addComponent(btEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(109, 109, 109))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(187, 187, 187)
+                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(92, 92, 92)
+                        .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -337,7 +358,9 @@ public class usuariosForm extends javax.swing.JFrame {
                 .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jPanel3.setBackground(new java.awt.Color(204, 204, 204));
@@ -347,11 +370,11 @@ public class usuariosForm extends javax.swing.JFrame {
 
             },
             new String [] {
-                "idEntidad", "ID", "Nombre", "Apellido", "Nombre Usuario", "Tipo Usuario", "Fecha Nacimiento", "N° DUI", "Contraseña"
+                "idEntidad", "ID", "Nombre", "Apellido", "Nombre Usuario", "Tipo Usuario", "Fecha Nacimiento", "N° DUI", "Contraseña", "Telefono"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -452,6 +475,7 @@ public class usuariosForm extends javax.swing.JFrame {
         try {
 
             CUsuarios.create(llenarEntidadUsuario());
+            CTelUsuarios.create(llenarEntidadTelUsuario());
             CargarUsuario();
 
         } catch (Exception e) {
@@ -462,10 +486,8 @@ public class usuariosForm extends javax.swing.JFrame {
 
         try {
             int idTipoU;
-            Usuario usuario = new Usuario();
+            
             TipoUsuario tipoUEntidad = new TipoUsuario();
-
- 
 
             usuario.setNombre(txtNombre.getText());
             usuario.setApellido(txtApellido.getText());
@@ -481,9 +503,20 @@ public class usuariosForm extends javax.swing.JFrame {
             usuario.setUsername(txtUserName.getText());
             usuario.setDui(txtDui.getText());
             usuario.setPass(txtPassword.getText());
-
             return usuario;
         } catch (Exception e) {
+        }
+        return null;
+    }
+    
+        public TelefonoUsuario llenarEntidadTelUsuario() {
+
+        try {         
+            Telefonousuario.setIdUsuario(usuario);
+            Telefonousuario.setTelefono(this.txtTelefono.getText()); 
+            return Telefonousuario;
+        } catch (Exception e) {
+           
         }
         return null;
     }
@@ -670,6 +703,7 @@ public class usuariosForm extends javax.swing.JFrame {
     private javax.swing.JLabel txtIdU;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtPassword;
+    private javax.swing.JTextField txtTelefono;
     private javax.swing.JTextField txtUserName;
     // End of variables declaration//GEN-END:variables
 }

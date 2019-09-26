@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -25,8 +26,8 @@ import javax.persistence.EntityManagerFactory;
  */
 public class TelefonoUsuarioJpaController implements Serializable {
 
-    public TelefonoUsuarioJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public TelefonoUsuarioJpaController() {
+      this.emf = Persistence.createEntityManagerFactory("esucelaProyectoPU");
     }
     private EntityManagerFactory emf = null;
 
