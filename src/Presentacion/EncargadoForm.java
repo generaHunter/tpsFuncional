@@ -26,6 +26,8 @@ public class EncargadoForm extends javax.swing.JFrame {
     DefaultTableModel modeloTable;
     ArrayList<Encargado> lEncargado;
      EncargadoJpaController CEncargado = new EncargadoJpaController();
+     Encargado EncargadoEdit;
+    boolean updateUser  = false;
     /**
      * Creates new form EncargadoForm
      */
@@ -34,7 +36,7 @@ public class EncargadoForm extends javax.swing.JFrame {
         
        lEncargado = new ArrayList<>();
         modeloTable = (DefaultTableModel) this.tableEncargado.getModel();
-        
+        btnActualizar.setEnabled(false);
         CargarUsuario();
     }
     
@@ -50,12 +52,15 @@ public class EncargadoForm extends javax.swing.JFrame {
             for (int i = 0; i < ListP.size(); i++) {
 
                 modeloTable.addRow(o);
-
-                modeloTable.setValueAt(ListP.get(i).getIdEncargado(), i, 0);
-                modeloTable.setValueAt(ListP.get(i).getNombre(), i, 1);
-                modeloTable.setValueAt(ListP.get(i).getApellido(), i, 2);
-                modeloTable.setValueAt(ListP.get(i).getDireccion(), i, 3);
-                modeloTable.setValueAt(ListP.get(i).getDui(), i, 4);
+                Encargado encargadoPrueba = new Encargado();
+                encargadoPrueba = ListP.get(i);
+                 modeloTable.setValueAt(encargadoPrueba, i, 0);
+                modeloTable.setValueAt(ListP.get(i).getIdEncargado(), i, 1);
+                modeloTable.setValueAt(ListP.get(i).getNombre(), i, 2);
+                modeloTable.setValueAt(ListP.get(i).getApellido(), i, 3);
+                modeloTable.setValueAt(ListP.get(i).getDireccion(), i, 4);
+                modeloTable.setValueAt(ListP.get(i).getDui(), i, 5);
+               
             }
 
         } catch (Exception e) {
@@ -83,13 +88,12 @@ public class EncargadoForm extends javax.swing.JFrame {
         txtNombre = new javax.swing.JTextField();
         txtDireccion = new javax.swing.JTextField();
         txtDui = new javax.swing.JFormattedTextField();
-        lblID = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         btnAgregar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnActualizar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableEncargado = new javax.swing.JTable();
         jLabel8 = new javax.swing.JLabel();
@@ -117,8 +121,6 @@ public class EncargadoForm extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-
-        lblID.setText("jTextField1");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -148,10 +150,6 @@ public class EncargadoForm extends javax.swing.JFrame {
                                 .addComponent(txtApellido, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
                                 .addComponent(txtDui)))))
                 .addContainerGap(138, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(lblID, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(161, 161, 161))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,9 +172,7 @@ public class EncargadoForm extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtDui, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42))
+                .addContainerGap(110, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
@@ -198,9 +194,19 @@ public class EncargadoForm extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("jButton3");
+        btnActualizar.setText("Actualizar");
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("jButton4");
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -213,8 +219,8 @@ public class EncargadoForm extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(117, 117, 117)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 147, Short.MAX_VALUE))
@@ -229,9 +235,9 @@ public class EncargadoForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
@@ -240,11 +246,11 @@ public class EncargadoForm extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nombre", "Apellido", "Dirección", "Dui"
+                "ID", "Nombre", "Apellido", "Dirección", "Dui", "Entidad"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -308,6 +314,7 @@ public class EncargadoForm extends javax.swing.JFrame {
 
             CEncargado.create(llenarEntidadUsuario());
             CargarUsuario();
+            LimpearCampos();
 
         } catch (Exception e) {
         }
@@ -320,7 +327,7 @@ public class EncargadoForm extends javax.swing.JFrame {
                 int indice = this.tableEncargado.getSelectedRow();
 
         try {
-            BigDecimal bigDecimalValue = new BigDecimal(modeloTable.getValueAt(indice, 0).toString());
+            BigDecimal bigDecimalValue = new BigDecimal(modeloTable.getValueAt(indice, 1).toString());
             int opcion = JOptionPane.showConfirmDialog(null, "Está seguro que desea eliminar al usuario "+bigDecimalValue.toString(), "Eliminar Usuario", JOptionPane.YES_NO_OPTION);
             if (opcion == 0) {
                 try {
@@ -329,7 +336,7 @@ public class EncargadoForm extends javax.swing.JFrame {
                     Logger.getLogger(EncargadoForm.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 this.CargarUsuario();
-                //this.LimpearCampos();
+                LimpearCampos();
             }
 
         } catch (IllegalOrphanException ex) {
@@ -337,25 +344,66 @@ public class EncargadoForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
+        public void LimpearCampos() {
+        updateUser = false;
+
+        txtNombre.setText("");
+        txtApellido.setText("");
+        txtDireccion.setText("");
+        txtDui.setText("");
+
+        btnActualizar.setEnabled(false);
+
+    }
+    
     private void tableEncargadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableEncargadoMouseClicked
         // TODO add your handling code here:
         
           int indice = this.tableEncargado.getSelectedRow();
+           btnActualizar.setEnabled(true);
+         
         if (indice > -1) {
+           EncargadoEdit = (Encargado) tableEncargado.getValueAt(tableEncargado.getSelectedRow(), 0);
             try {
-                //updateUser = true;
-                lblID.setText(modeloTable.getValueAt(indice, 0).toString());
-                txtNombre.setText(modeloTable.getValueAt(indice, 1).toString());
-                txtApellido.setText(modeloTable.getValueAt(indice, 2).toString());
-                txtDireccion.setText(modeloTable.getValueAt(indice, 3).toString());
-                txtDui.setText(modeloTable.getValueAt(indice, 4).toString());
+                updateUser = true;
+                txtNombre.setText(modeloTable.getValueAt(indice, 2).toString());
+                txtApellido.setText(modeloTable.getValueAt(indice, 3).toString());
+                txtDireccion.setText(modeloTable.getValueAt(indice, 4).toString());
+                txtDui.setText(modeloTable.getValueAt(indice, 5).toString());
                 
-                //btnUpdate.setEnabled(true);
-               // usuarioEdit = (Usuario) tablaUsuarios.getValueAt(tablaUsuarios.getSelectedRow(), 0);
+               
+              
             } catch (Exception e) {
             }
         }
     }//GEN-LAST:event_tableEncargadoMouseClicked
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        try {
+            // TODO add your handling code here:4
+            
+            EncargadoEdit.setNombre(txtNombre.getText());
+            EncargadoEdit.setApellido(txtApellido.getText());
+            EncargadoEdit.setDireccion(txtDireccion.getText());
+            EncargadoEdit.setDui(txtDui.getText());
+            
+            CEncargado.edit(EncargadoEdit);
+            LimpearCampos();
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(EncargadoForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(EncargadoForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            CargarUsuario();
+   
+
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        LimpearCampos();
+        btnActualizar.setEnabled(false);
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
      public Encargado llenarEntidadUsuario() {
 
@@ -363,7 +411,7 @@ public class EncargadoForm extends javax.swing.JFrame {
 
             Encargado encargado = new Encargado();
 
- 
+
 
             encargado.setNombre(txtNombre.getText());
             encargado.setApellido(txtApellido.getText());
@@ -413,10 +461,10 @@ public class EncargadoForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEliminar;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -428,7 +476,6 @@ public class EncargadoForm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField lblID;
     private javax.swing.JTable tableEncargado;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtDireccion;
