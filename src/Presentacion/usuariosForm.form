@@ -48,12 +48,15 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel1" min="-2" pref="46" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
                   <Component id="jPanel1" max="32767" attributes="0"/>
-                  <Component id="jPanel2" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="jPanel3" max="32767" attributes="0"/>
+              <Component id="jPanel3" min="-2" pref="283" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -96,6 +99,7 @@
                                       <Component id="jLabel7" alignment="1" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel8" alignment="1" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel9" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="txtIdU" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -108,15 +112,11 @@
                               <Component id="txtFechaNac" alignment="0" max="32767" attributes="0"/>
                               <Component id="txtDui" alignment="0" max="32767" attributes="0"/>
                               <Component id="txtPassword" alignment="0" max="32767" attributes="0"/>
+                              <Component id="txtTelefono" alignment="1" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="154" max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="183" max="-2" attributes="0"/>
-                  <Component id="txtIdU" min="-2" pref="36" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -160,9 +160,12 @@
                       <Component id="txtPassword" min="-2" pref="28" max="-2" attributes="0"/>
                       <Component id="jLabel9" pref="29" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="txtIdU" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="txtIdU" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtTelefono" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="48" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -257,7 +260,14 @@
         </Component>
         <Component class="javax.swing.JLabel" name="txtIdU">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jLabel13"/>
+            <Property name="text" type="java.lang.String" value="Telefono:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txtTelefono">
+          <Properties>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
+              <Format format="####-####" subtype="-1" type="5"/>
+            </Property>
           </Properties>
         </Component>
       </SubComponents>
@@ -294,17 +304,9 @@
                   <EmptySpace min="-2" pref="109" max="-2" attributes="0"/>
               </Group>
               <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="-2" pref="187" max="-2" attributes="0"/>
-                          <Component id="jLabel10" min="-2" pref="56" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="92" max="-2" attributes="0"/>
-                          <Component id="txtTelefono" min="-2" pref="161" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="187" max="-2" attributes="0"/>
+                  <Component id="jLabel10" min="-2" pref="56" max="-2" attributes="0"/>
+                  <EmptySpace pref="186" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -321,9 +323,7 @@
                   <Component id="btnUpdate" min="-2" pref="52" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="btnCancelar" min="-2" pref="52" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
-                  <Component id="txtTelefono" min="-2" pref="28" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace pref="68" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -368,8 +368,6 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelarActionPerformed"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtTelefono">
         </Component>
       </SubComponents>
     </Container>
@@ -417,7 +415,7 @@
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" pref="228" max="-2" attributes="0"/>
-                  <EmptySpace pref="20" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -433,7 +431,7 @@
             <Component class="javax.swing.JTable" name="tablaUsuarios">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="10" rowCount="0">
+                  <Table columnCount="11" rowCount="0">
                     <Column editable="false" title="idEntidad" type="java.lang.Object"/>
                     <Column editable="false" title="ID" type="java.lang.Object"/>
                     <Column editable="false" title="Nombre" type="java.lang.Object"/>
@@ -444,6 +442,7 @@
                     <Column editable="false" title="N&#xb0; DUI" type="java.lang.Object"/>
                     <Column editable="false" title="Contrase&#xf1;a" type="java.lang.Object"/>
                     <Column editable="false" title="Telefono" type="java.lang.Object"/>
+                    <Column editable="false" title="idTel" type="java.lang.Object"/>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -494,6 +493,11 @@
                       <Renderer/>
                     </Column>
                     <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="0" minWidth="0" prefWidth="0" resizable="true">
                       <Title/>
                       <Editor/>
                       <Renderer/>
