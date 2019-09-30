@@ -5,6 +5,7 @@
  */
 package Logica_Negocio;
 
+import Datos.UsuarioJpaController;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,6 +26,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.swing.JComboBox;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -46,6 +48,12 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Usuario.findByDui", query = "SELECT u FROM Usuario u WHERE u.dui = :dui")
     , @NamedQuery(name = "Usuario.findByEstado", query = "SELECT u FROM Usuario u WHERE u.estado = :estado")})
 public class Usuario implements Serializable {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idUsuario")
+    private List<MateriaUsuario> materiaUsuarioList;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idUsuario")
+    private List<UsuarioGrado> usuarioGradoList;
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -196,9 +204,48 @@ public class Usuario implements Serializable {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "Logica_Negocio.Usuario[ idUsuario=" + idUsuario + " ]";
+    @XmlTransient
+    public List<UsuarioGrado> getUsuarioGradoList() {
+        return usuarioGradoList;
+    }
+
+    public void setUsuarioGradoList(List<UsuarioGrado> usuarioGradoList) {
+        this.usuarioGradoList = usuarioGradoList;
     }
     
+        public void ComboUsuario(JComboBox<Usuario> cbUsuario)
+    {
+        try {
+            UsuarioJpaController CUsuario= new UsuarioJpaController();
+            List<Usuario> ListUsuario = CUsuario.findUsuarioEntities();
+            for (int i = 0; i < ListUsuario.size(); i++) {
+                if(ListUsuario.get(i).getIdTipo().getTipo().equals("Profesor"))
+                {
+                     cbUsuario.addItem(
+                        new Usuario(
+                                ListUsuario.get(i).getIdUsuario(),
+                                ListUsuario.get(i).getNombre(),
+                                ListUsuario.get(i).getApellido(),
+                                ListUsuario.get(i).getUsername(),
+                                ListUsuario.get(i).getPass()
+                        )           
+                );
+                }
+            }
+        } catch (Exception e) {
+        }
+    }
+            @Override
+    public String toString() {
+        return nombre + " "+apellido;
+    }
+
+    @XmlTransient
+    public List<MateriaUsuario> getMateriaUsuarioList() {
+        return materiaUsuarioList;
+    }
+
+    public void setMateriaUsuarioList(List<MateriaUsuario> materiaUsuarioList) {
+        this.materiaUsuarioList = materiaUsuarioList;
+    }
 }

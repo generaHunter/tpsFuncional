@@ -7,7 +7,6 @@ package Presentacion;
 
 import Datos.TelefonoUsuarioJpaController;
 import Datos.TipoUsuarioJpaController;
-import Datos.UsuarioGradoJpaController;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import Datos.UsuarioJpaController;

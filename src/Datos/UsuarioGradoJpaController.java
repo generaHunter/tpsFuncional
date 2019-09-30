@@ -7,16 +7,19 @@ package Datos;
 
 import Datos.exceptions.NonexistentEntityException;
 import Datos.exceptions.PreexistingEntityException;
-import Logica_Negocio.UsuarioGrado;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import Logica_Negocio.Grado;
+import Logica_Negocio.Usuario;
+import Logica_Negocio.UsuarioGrado;
+import java.math.BigDecimal;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -24,8 +27,8 @@ import javax.persistence.criteria.Root;
  */
 public class UsuarioGradoJpaController implements Serializable {
 
-    public UsuarioGradoJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public UsuarioGradoJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("esucelaProyectoPU");
     }
     private EntityManagerFactory emf = null;
 
@@ -38,7 +41,25 @@ public class UsuarioGradoJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Grado idGrado = usuarioGrado.getIdGrado();
+            if (idGrado != null) {
+                idGrado = em.getReference(idGrado.getClass(), idGrado.getIdGrado());
+                usuarioGrado.setIdGrado(idGrado);
+            }
+            Usuario idUsuario = usuarioGrado.getIdUsuario();
+            if (idUsuario != null) {
+                idUsuario = em.getReference(idUsuario.getClass(), idUsuario.getIdUsuario());
+                usuarioGrado.setIdUsuario(idUsuario);
+            }
             em.persist(usuarioGrado);
+            if (idGrado != null) {
+                idGrado.getUsuarioGradoList().add(usuarioGrado);
+                idGrado = em.merge(idGrado);
+            }
+            if (idUsuario != null) {
+                idUsuario.getUsuarioGradoList().add(usuarioGrado);
+                idUsuario = em.merge(idUsuario);
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             if (findUsuarioGrado(usuarioGrado.getIdUsuarioGrado()) != null) {
@@ -57,7 +78,36 @@ public class UsuarioGradoJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            UsuarioGrado persistentUsuarioGrado = em.find(UsuarioGrado.class, usuarioGrado.getIdUsuarioGrado());
+            Grado idGradoOld = persistentUsuarioGrado.getIdGrado();
+            Grado idGradoNew = usuarioGrado.getIdGrado();
+            Usuario idUsuarioOld = persistentUsuarioGrado.getIdUsuario();
+            Usuario idUsuarioNew = usuarioGrado.getIdUsuario();
+            if (idGradoNew != null) {
+                idGradoNew = em.getReference(idGradoNew.getClass(), idGradoNew.getIdGrado());
+                usuarioGrado.setIdGrado(idGradoNew);
+            }
+            if (idUsuarioNew != null) {
+                idUsuarioNew = em.getReference(idUsuarioNew.getClass(), idUsuarioNew.getIdUsuario());
+                usuarioGrado.setIdUsuario(idUsuarioNew);
+            }
             usuarioGrado = em.merge(usuarioGrado);
+            if (idGradoOld != null && !idGradoOld.equals(idGradoNew)) {
+                idGradoOld.getUsuarioGradoList().remove(usuarioGrado);
+                idGradoOld = em.merge(idGradoOld);
+            }
+            if (idGradoNew != null && !idGradoNew.equals(idGradoOld)) {
+                idGradoNew.getUsuarioGradoList().add(usuarioGrado);
+                idGradoNew = em.merge(idGradoNew);
+            }
+            if (idUsuarioOld != null && !idUsuarioOld.equals(idUsuarioNew)) {
+                idUsuarioOld.getUsuarioGradoList().remove(usuarioGrado);
+                idUsuarioOld = em.merge(idUsuarioOld);
+            }
+            if (idUsuarioNew != null && !idUsuarioNew.equals(idUsuarioOld)) {
+                idUsuarioNew.getUsuarioGradoList().add(usuarioGrado);
+                idUsuarioNew = em.merge(idUsuarioNew);
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -86,6 +136,16 @@ public class UsuarioGradoJpaController implements Serializable {
                 usuarioGrado.getIdUsuarioGrado();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The usuarioGrado with id " + id + " no longer exists.", enfe);
+            }
+            Grado idGrado = usuarioGrado.getIdGrado();
+            if (idGrado != null) {
+                idGrado.getUsuarioGradoList().remove(usuarioGrado);
+                idGrado = em.merge(idGrado);
+            }
+            Usuario idUsuario = usuarioGrado.getIdUsuario();
+            if (idUsuario != null) {
+                idUsuario.getUsuarioGradoList().remove(usuarioGrado);
+                idUsuario = em.merge(idUsuario);
             }
             em.remove(usuarioGrado);
             em.getTransaction().commit();
