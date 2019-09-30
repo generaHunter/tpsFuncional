@@ -40,11 +40,13 @@ public class usuariosForm extends javax.swing.JFrame {
     TelefonoUsuarioJpaController CTelUsuarios = new TelefonoUsuarioJpaController();
     TipoUsuarioJpaController CTipoU = new TipoUsuarioJpaController();
     Usuario usuario = new Usuario();
+    BigDecimal idUsua;
     TelefonoUsuario Telefonousuario = new TelefonoUsuario();
 
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-
+    boolean TelefonoUsu = false;
     Usuario usuarioEdit;
+    TelefonoUsuario telUsuEdit;
     
     boolean updateUser = false;
 
@@ -56,10 +58,9 @@ public class usuariosForm extends javax.swing.JFrame {
 
         lUsuarios = new ArrayList<>();
         modeloTable = (DefaultTableModel) this.tablaUsuarios.getModel();
-
         llenarCombo();
-
         btnUpdate.setEnabled(false);
+        this.btEliminar.setEnabled(false);
         CargarUsuario();
 
     }
@@ -110,12 +111,13 @@ public class usuariosForm extends javax.swing.JFrame {
                     if(modeloTable.getValueAt(i, 1).toString().equals(ListTel.get(j).getIdUsuario().getIdUsuario().toString()))
                     {
                         modeloTable.setValueAt(ListTel.get(j).getTelefono(), i, 9); 
+                        modeloTable.setValueAt(ListTel.get(j), i, 10); 
                     }
                 }
-
+//                tablaUsuarios.getColumnModel().getColumn(10).setMaxWidth(0);
+//                tablaUsuarios.getColumnModel().getColumn(10).setMinWidth(0);
+//                tablaUsuarios.getColumnModel().getColumn(10).setPreferredWidth(0);
             }
-            
-        
         } catch (Exception e) {
         }
 
@@ -147,6 +149,7 @@ public class usuariosForm extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         txtPassword = new javax.swing.JTextField();
         txtIdU = new javax.swing.JLabel();
+        txtTelefono = new javax.swing.JFormattedTextField();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
@@ -154,7 +157,6 @@ public class usuariosForm extends javax.swing.JFrame {
         btEliminar = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
-        txtTelefono = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaUsuarios = new javax.swing.JTable();
@@ -205,7 +207,13 @@ public class usuariosForm extends javax.swing.JFrame {
 
         jLabel9.setText("Contraseña:");
 
-        txtIdU.setText("jLabel13");
+        txtIdU.setText("Telefono:");
+
+        try {
+            txtTelefono.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -232,7 +240,8 @@ public class usuariosForm extends javax.swing.JFrame {
                                     .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))))
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(txtIdU, javax.swing.GroupLayout.Alignment.TRAILING))))
                         .addGap(24, 24, 24)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtNombre)
@@ -241,12 +250,9 @@ public class usuariosForm extends javax.swing.JFrame {
                             .addComponent(cbxUserType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtFechaNac)
                             .addComponent(txtDui)
-                            .addComponent(txtPassword))))
+                            .addComponent(txtPassword)
+                            .addComponent(txtTelefono, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addGap(154, 154, 154))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(183, 183, 183)
-                .addComponent(txtIdU, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -281,9 +287,11 @@ public class usuariosForm extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtIdU)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtIdU)
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
 
         jLabel1.setFont(new java.awt.Font("Yu Gothic Medium", 1, 14)); // NOI18N
@@ -336,14 +344,9 @@ public class usuariosForm extends javax.swing.JFrame {
                     .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(109, 109, 109))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(187, 187, 187)
-                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(92, 92, 92)
-                        .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(187, 187, 187)
+                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(186, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -358,9 +361,7 @@ public class usuariosForm extends javax.swing.JFrame {
                 .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(68, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(204, 204, 204));
@@ -370,11 +371,11 @@ public class usuariosForm extends javax.swing.JFrame {
 
             },
             new String [] {
-                "idEntidad", "ID", "Nombre", "Apellido", "Nombre Usuario", "Tipo Usuario", "Fecha Nacimiento", "N° DUI", "Contraseña", "Telefono"
+                "idEntidad", "ID", "Nombre", "Apellido", "Nombre Usuario", "Tipo Usuario", "Fecha Nacimiento", "N° DUI", "Contraseña", "Telefono", "idTel"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -391,6 +392,9 @@ public class usuariosForm extends javax.swing.JFrame {
             tablaUsuarios.getColumnModel().getColumn(8).setMinWidth(0);
             tablaUsuarios.getColumnModel().getColumn(8).setPreferredWidth(0);
             tablaUsuarios.getColumnModel().getColumn(8).setMaxWidth(0);
+            tablaUsuarios.getColumnModel().getColumn(10).setMinWidth(0);
+            tablaUsuarios.getColumnModel().getColumn(10).setPreferredWidth(0);
+            tablaUsuarios.getColumnModel().getColumn(10).setMaxWidth(0);
         }
 
         jLabel11.setFont(new java.awt.Font("Tempus Sans ITC", 1, 12)); // NOI18N
@@ -431,7 +435,7 @@ public class usuariosForm extends javax.swing.JFrame {
                     .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -458,11 +462,13 @@ public class usuariosForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -475,10 +481,14 @@ public class usuariosForm extends javax.swing.JFrame {
         try {
 
             CUsuarios.create(llenarEntidadUsuario());
-            CTelUsuarios.create(llenarEntidadTelUsuario());
+            if(!this.txtTelefono.getText().trim().equals("-"))
+            {
+                CTelUsuarios.create(llenarEntidadTelUsuario());
+            }
             CargarUsuario();
 
         } catch (Exception e) {
+             JOptionPane.showMessageDialog(null, e);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -512,6 +522,12 @@ public class usuariosForm extends javax.swing.JFrame {
         public TelefonoUsuario llenarEntidadTelUsuario() {
 
         try {         
+            if(TelefonoUsu)
+            {
+                Usuario usuariotel = new Usuario();
+                usuariotel.setIdUsuario(idUsua);
+                TelefonoUsu=false;
+            }
             Telefonousuario.setIdUsuario(usuario);
             Telefonousuario.setTelefono(this.txtTelefono.getText()); 
             return Telefonousuario;
@@ -532,11 +548,19 @@ public class usuariosForm extends javax.swing.JFrame {
 
         try {
             BigDecimal bigDecimalValue = new BigDecimal(modeloTable.getValueAt(indice, 1).toString());
+           
             int opcion = JOptionPane.showConfirmDialog(null, "Está seguro que desea eliminar al usuario "+bigDecimalValue.toString(), "Eliminar Usuario", JOptionPane.YES_NO_OPTION);
             if (opcion == 0) {
+                if(TelefonoUsu)
+                {
+                    BigDecimal bigDecimalValueTel = new BigDecimal(modeloTable.getValueAt(indice, 10).toString());
+                    CTelUsuarios.destroy(bigDecimalValueTel);
+                }
                 CUsuarios.destroy(bigDecimalValue);
                 this.CargarUsuario();
                 this.LimpearCampos();
+                this.btEliminar.setEnabled(false);
+                this.btnUpdate.setEnabled(false);
             }
             
 
@@ -555,18 +579,30 @@ public class usuariosForm extends javax.swing.JFrame {
         if (indice > -1) {
             try {
                 updateUser = true;
-
+                btnUpdate.setEnabled(true);
+                this.btEliminar.setEnabled(true);
+                idUsua=new BigDecimal(modeloTable.getValueAt(indice, 1).toString());
    
                 txtNombre.setText(modeloTable.getValueAt(indice, 2).toString());
                 txtApellido.setText(modeloTable.getValueAt(indice, 3).toString());
                 txtUserName.setText(modeloTable.getValueAt(indice, 4).toString());
                 txtFechaNac.setText(modeloTable.getValueAt(indice, 6).toString());
                 txtDui.setText(modeloTable.getValueAt(indice, 7).toString());
-                txtPassword.setText(modeloTable.getValueAt(indice, 8).toString());
-
-                btnUpdate.setEnabled(true);
+                txtPassword.setText(modeloTable.getValueAt(indice, 8).toString());            
+                usuarioEdit = (Usuario) tablaUsuarios.getValueAt(tablaUsuarios.getSelectedRow(), 0);
+                  if(!(modeloTable.getValueAt(indice, 9)==null))
+                {
+                    txtTelefono.setText(modeloTable.getValueAt(indice, 9).toString());
+                    TelefonoUsu=true;
+                    telUsuEdit= (TelefonoUsuario) tablaUsuarios.getValueAt(tablaUsuarios.getSelectedRow(), 10);    
+                }                   
+                else
+                {
+                    txtTelefono.setText("");
+                }
+                usuarioEdit = (Usuario) tablaUsuarios.getValueAt(tablaUsuarios.getSelectedRow(), 0);
+                 JOptionPane.showMessageDialog(null, tablaUsuarios.getValueAt(tablaUsuarios.getSelectedRow(), 0).toString());
                 
-                        usuarioEdit = (Usuario) tablaUsuarios.getValueAt(tablaUsuarios.getSelectedRow(), 0);
             } catch (Exception e) {
             }
         }
@@ -583,14 +619,18 @@ public class usuariosForm extends javax.swing.JFrame {
         txtFechaNac.setText("");
         txtDui.setText("");
         txtPassword.setText("");
+        txtTelefono.setText("");
 
         btnUpdate.setEnabled(false);
+        btEliminar.setEnabled(false);
 
     }
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
 
+        btEliminar.setEnabled(false);
+        btnUpdate.setEnabled(false);
         LimpearCampos();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
@@ -610,21 +650,31 @@ public class usuariosForm extends javax.swing.JFrame {
             usuarioEdit.setNombre(txtNombre.getText());
             usuarioEdit.setApellido(txtApellido.getText());
             usuarioEdit.setFechaNac(formatter.parse(txtFechaNac.getText()));
-            usuarioEdit.setDui(txtDui.getText());
-
+            usuarioEdit.setDui(txtDui.getText());            
             idTipoU = tipoUEntidad.extraerIDTipoU(cbxUserType.getSelectedItem().toString());
 
             tipoUEntidad.setIdTipo(BigDecimal.valueOf(idTipoU));
-
             usuarioEdit.setIdTipo(tipoUEntidad);
 
             usuarioEdit.setUsername(txtUserName.getText());
-            usuarioEdit.setDui(txtDui.getText());
-            usuarioEdit.setPass(txtPassword.getText());
-            
+            usuarioEdit.setPass(txtPassword.getText());           
             CUsuarios.edit(usuarioEdit);
-           
-                    CargarUsuario();
+            if(TelefonoUsu)
+            {
+                Usuario usuariotel = new Usuario();
+                usuariotel.setIdUsuario(idUsua);
+                telUsuEdit.setTelefono(txtTelefono.getText());
+                telUsuEdit.setIdUsuario(usuariotel);
+                CTelUsuarios.edit(telUsuEdit);
+                TelefonoUsu=false;
+            }
+            else if(!this.txtTelefono.getText().trim().equals("-"))
+            {
+                TelefonoUsu=true;
+                CTelUsuarios.create(llenarEntidadTelUsuario());
+            }
+            
+            CargarUsuario();
                 }
             } catch (Exception e) {
 
@@ -703,7 +753,7 @@ public class usuariosForm extends javax.swing.JFrame {
     private javax.swing.JLabel txtIdU;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtPassword;
-    private javax.swing.JTextField txtTelefono;
+    private javax.swing.JFormattedTextField txtTelefono;
     private javax.swing.JTextField txtUserName;
     // End of variables declaration//GEN-END:variables
 }
