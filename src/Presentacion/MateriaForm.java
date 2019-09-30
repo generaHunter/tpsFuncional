@@ -46,8 +46,9 @@ public class MateriaForm extends javax.swing.JFrame {
             for (int i = 0; i < ListA.size(); i++) {
             
                 modeloTable.addRow(o);
-                modeloTable.setValueAt(ListA.get(i), i, 0);
+                modeloTable.setValueAt(ListA.get(i).getIdMateria(), i, 0);
                 modeloTable.setValueAt(ListA.get(i).getMateria(), i, 1);  
+                modeloTable.setValueAt(ListA.get(i), i, 2);  
             }
 
         } catch (Exception e) {
@@ -187,11 +188,11 @@ public class MateriaForm extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nombre Materia"
+                "ID", "Nombre Materia", "Entidad"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -204,6 +205,11 @@ public class MateriaForm extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(tablaMaterias);
+        if (tablaMaterias.getColumnModel().getColumnCount() > 0) {
+            tablaMaterias.getColumnModel().getColumn(2).setMinWidth(0);
+            tablaMaterias.getColumnModel().getColumn(2).setPreferredWidth(0);
+            tablaMaterias.getColumnModel().getColumn(2).setMaxWidth(0);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -322,7 +328,7 @@ public class MateriaForm extends javax.swing.JFrame {
             if (indice > -1)
             {
                 txtNombre.setText(modeloTable.getValueAt(indice, 1).toString());
-                MateriaEdit = (Materia) tablaMaterias.getValueAt(tablaMaterias.getSelectedRow(), 0);
+                MateriaEdit = (Materia) tablaMaterias.getValueAt(tablaMaterias.getSelectedRow(), 2);
                 this.btnUpdate.setEnabled(true);
                 this.btnDelete.setEnabled(true);
                 this.btNuevo.setEnabled(false);

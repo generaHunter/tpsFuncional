@@ -87,6 +87,10 @@ public class TipoUsuario implements Serializable {
         if (nameType.equals("Administrador")) {
             ID = 1;
         }
+        else if(nameType.equals("Profesor"))
+        {
+            ID = 2;
+        }
         return ID;}
     
     @Override

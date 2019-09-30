@@ -5,9 +5,12 @@
  */
 package Logica_Negocio;
 
+import Datos.GradoJpaController;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,9 +18,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.swing.JComboBox;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -31,6 +37,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Grado.findByIdGrado", query = "SELECT g FROM Grado g WHERE g.idGrado = :idGrado")
     , @NamedQuery(name = "Grado.findByGrado", query = "SELECT g FROM Grado g WHERE g.grado = :grado")})
 public class Grado implements Serializable {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idGrado")
+    private List<UsuarioGrado> usuarioGradoList;
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -94,7 +103,32 @@ public class Grado implements Serializable {
 
     @Override
     public String toString() {
-        return "Logica_Negocio.Grado[ idGrado=" + idGrado + " ]";
+        return grado.toString();
+    }
+
+    @XmlTransient
+    public List<UsuarioGrado> getUsuarioGradoList() {
+        return usuarioGradoList;
+    }
+
+    public void setUsuarioGradoList(List<UsuarioGrado> usuarioGradoList) {
+        this.usuarioGradoList = usuarioGradoList;
     }
     
+    public void ComboGrado(JComboBox<Grado> cbGrado)
+    {
+        try {
+            GradoJpaController CGrado= new GradoJpaController();
+            List<Grado> ListGrado = CGrado.findGradoEntities();
+            for (int i = 0; i < ListGrado.size(); i++) {             
+                cbGrado.addItem(
+                   new Grado(
+                           ListGrado.get(i).getIdGrado(),
+                           ListGrado.get(i).getGrado()
+                   )           
+                ); 
+            }
+        } catch (Exception e) {
+        }
+    }
 }

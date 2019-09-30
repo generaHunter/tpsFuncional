@@ -26,49 +26,49 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author JoseM
  */
 @Entity
-@Table(name = "USUARIO_GRADO")
+@Table(name = "MATERIA_USUARIO")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "UsuarioGrado.findAll", query = "SELECT u FROM UsuarioGrado u")
-    , @NamedQuery(name = "UsuarioGrado.findByIdUsuarioGrado", query = "SELECT u FROM UsuarioGrado u WHERE u.idUsuarioGrado = :idUsuarioGrado")})
-public class UsuarioGrado implements Serializable {
+    @NamedQuery(name = "MateriaUsuario.findAll", query = "SELECT m FROM MateriaUsuario m")
+    , @NamedQuery(name = "MateriaUsuario.findByIdMatusu", query = "SELECT m FROM MateriaUsuario m WHERE m.idMatusu = :idMatusu")})
+public class MateriaUsuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
     @Basic(optional = false)
-    @SequenceGenerator(name = "seq_id_usuario_grado", sequenceName = "seq_id_usuario_grado", allocationSize = 1) 
-    @GeneratedValue(strategy= GenerationType.IDENTITY , generator="seq_id_usuario_grado")
-    @Column(name = "ID_USUARIO_GRADO")
-    private BigDecimal idUsuarioGrado;
-    @JoinColumn(name = "ID_GRADO", referencedColumnName = "ID_GRADO")
+        @SequenceGenerator(name = "seq_id_Matusu", sequenceName = "seq_id_Matusu", allocationSize = 1) 
+    @GeneratedValue(strategy= GenerationType.IDENTITY , generator="seq_id_Matusu")
+    @Column(name = "ID_MATUSU")
+    private BigDecimal idMatusu;
+    @JoinColumn(name = "ID_MATERIA", referencedColumnName = "ID_MATERIA")
     @ManyToOne(optional = false)
-    private Grado idGrado;
+    private Materia idMateria;
     @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO")
     @ManyToOne(optional = false)
     private Usuario idUsuario;
 
-    public UsuarioGrado() {
+    public MateriaUsuario() {
     }
 
-    public UsuarioGrado(BigDecimal idUsuarioGrado) {
-        this.idUsuarioGrado = idUsuarioGrado;
+    public MateriaUsuario(BigDecimal idMatusu) {
+        this.idMatusu = idMatusu;
     }
 
-    public BigDecimal getIdUsuarioGrado() {
-        return idUsuarioGrado;
+    public BigDecimal getIdMatusu() {
+        return idMatusu;
     }
 
-    public void setIdUsuarioGrado(BigDecimal idUsuarioGrado) {
-        this.idUsuarioGrado = idUsuarioGrado;
+    public void setIdMatusu(BigDecimal idMatusu) {
+        this.idMatusu = idMatusu;
     }
 
-    public Grado getIdGrado() {
-        return idGrado;
+    public Materia getIdMateria() {
+        return idMateria;
     }
 
-    public void setIdGrado(Grado idGrado) {
-        this.idGrado = idGrado;
+    public void setIdMateria(Materia idMateria) {
+        this.idMateria = idMateria;
     }
 
     public Usuario getIdUsuario() {
@@ -82,18 +82,18 @@ public class UsuarioGrado implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idUsuarioGrado != null ? idUsuarioGrado.hashCode() : 0);
+        hash += (idMatusu != null ? idMatusu.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UsuarioGrado)) {
+        if (!(object instanceof MateriaUsuario)) {
             return false;
         }
-        UsuarioGrado other = (UsuarioGrado) object;
-        if ((this.idUsuarioGrado == null && other.idUsuarioGrado != null) || (this.idUsuarioGrado != null && !this.idUsuarioGrado.equals(other.idUsuarioGrado))) {
+        MateriaUsuario other = (MateriaUsuario) object;
+        if ((this.idMatusu == null && other.idMatusu != null) || (this.idMatusu != null && !this.idMatusu.equals(other.idMatusu))) {
             return false;
         }
         return true;
@@ -101,7 +101,7 @@ public class UsuarioGrado implements Serializable {
 
     @Override
     public String toString() {
-        return  idUsuarioGrado.toString();
+        return  idMatusu.toString();
     }
     
 }

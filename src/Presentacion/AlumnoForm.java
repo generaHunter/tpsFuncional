@@ -64,7 +64,7 @@ public class AlumnoForm extends javax.swing.JFrame {
                 String fechaTexto = formatter.format(fecha);
                 modeloTable.setValueAt(fechaTexto, i,3);
                 modeloTable.setValueAt(ListA.get(i).getIdEncargado().getNombre()+" "+ListA.get(i).getIdEncargado().getApellido(), i, 4);
-                modeloTable.setValueAt(ListA.get(i).getIdEncargado().getIdEncargado().toString(), i, 5);
+                //modeloTable.setValueAt(ListA.get(i).getIdEncargado().getIdEncargado().toString(), i, 5);
             }
 
         } catch (Exception e) {
@@ -352,7 +352,7 @@ public class AlumnoForm extends javax.swing.JFrame {
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
-                int indice = this.tablaAlumno.getSelectedRow();
+        int indice = this.tablaAlumno.getSelectedRow();
 
         try {
             BigDecimal bigDecimalValue = new BigDecimal(modeloTable.getValueAt(indice, 0).toString());
@@ -362,7 +362,7 @@ public class AlumnoForm extends javax.swing.JFrame {
                 this.CargarAlumno();
                 this.btnDelete.setEnabled(false);
                 this.btnUpdate.setEnabled(false);
-                this.btNuevo.setEnabled(true);
+                this.btNuevo.setEnabled(true);              
             }
             else
             {
