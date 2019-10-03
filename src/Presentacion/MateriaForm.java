@@ -100,21 +100,21 @@ public class MateriaForm extends javax.swing.JFrame {
         jLabel10.setFont(new java.awt.Font("Tempus Sans ITC", 1, 12)); // NOI18N
         jLabel10.setText("Acciones");
 
-        btNuevo.setText("Agregar Nuevo Alumno");
+        btNuevo.setText("Agregar Nueva Materia");
         btNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btNuevoActionPerformed(evt);
             }
         });
 
-        btnDelete.setText("Eliminar Alumno");
+        btnDelete.setText("Eliminar Materia");
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeleteActionPerformed(evt);
             }
         });
 
-        btnUpdate.setText("Actualizar Alumno");
+        btnUpdate.setText("Actualizar Materia");
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateActionPerformed(evt);
@@ -264,7 +264,7 @@ public class MateriaForm extends javax.swing.JFrame {
 
         try {
             BigDecimal bigDecimalValue = new BigDecimal(modeloTable.getValueAt(indice, 0).toString());
-            int opcion = JOptionPane.showConfirmDialog(null, "Está seguro que desea eliminar al alumno "+bigDecimalValue.toString(), "Eliminar Alumno", JOptionPane.YES_NO_OPTION);
+            int opcion = JOptionPane.showConfirmDialog(null, "Está seguro que desea eliminar la materiaa "+bigDecimalValue.toString(), "Eliminar Matreia", JOptionPane.YES_NO_OPTION);
             if (opcion == 0) {
             
                 CMateria.destroy(bigDecimalValue);
@@ -291,7 +291,7 @@ public class MateriaForm extends javax.swing.JFrame {
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         // TODO add your handling code here:
         try {
-            int opcion = JOptionPane.showConfirmDialog(null, "Está seguro que desea actualizar al alumno", "Actualizar Alumno", JOptionPane.YES_NO_OPTION);
+            int opcion = JOptionPane.showConfirmDialog(null, "Está seguro que desea actualizar la materia", "Actualizar Materia", JOptionPane.YES_NO_OPTION);
             if (opcion == 0)
             {
                 MateriaEdit.setMateria(txtNombre.getText());
