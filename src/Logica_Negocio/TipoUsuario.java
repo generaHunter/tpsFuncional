@@ -5,6 +5,7 @@
  */
 package Logica_Negocio;
 
+import Datos.TipoUsuarioJpaController;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
@@ -83,14 +84,29 @@ public class TipoUsuario implements Serializable {
      public int extraerIDTipoU(String nameType){
         
         int ID = 0;
+        
+        TipoUsuario tipos = new TipoUsuario();
+
+        TipoUsuarioJpaController CTipos = new TipoUsuarioJpaController();
+        
+         List<TipoUsuario> ListTipos  =  CTipos.findTipoUsuarioEntities();
+         
+         for (int i = 0; i < ListTipos.size(); i++) {
+             
+             if (nameType.equals(ListTipos.get(i).getTipo())) {
+                 
+                 ID = Integer.parseInt(ListTipos.get(i).getIdTipo().toString()); 
+             }
+         }
+        
     
-        if (nameType.equals("Administrador")) {
-            ID = 1;
-        }
-        else if(nameType.equals("Profesor"))
-        {
-            ID = 2;
-        }
+       // if (nameType.equals("Administrador")) {
+           // ID = 1;
+       // }
+        //else if(nameType.equals("Profesor"))
+        //{
+        //    ID = 2;
+        //}
         return ID;}
     
     @Override

@@ -6,10 +6,13 @@
 package Presentacion;
 
 import Datos.EncargadoJpaController;
+import Datos.TelefonoEncargadoJpaController;
 import Datos.exceptions.IllegalOrphanException;
 import Datos.exceptions.NonexistentEntityException;
 import Logica_Negocio.Encargado;
+import Logica_Negocio.TelefonoEncargado;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,17 +31,27 @@ public class EncargadoForm extends javax.swing.JFrame {
      EncargadoJpaController CEncargado = new EncargadoJpaController();
      Encargado EncargadoEdit;
     boolean updateUser  = false;
+    
+    
+    TelefonoEncargadoJpaController CTelUsuarios = new TelefonoEncargadoJpaController();
+    TelefonoEncargado Telefonousuario = new TelefonoEncargado();
+    
+    TelefonoEncargado telUsuEdit;
+    boolean TelefonoUsu = false;
+    
     /**
      * Creates new form EncargadoForm
      */
     public EncargadoForm() {
         initComponents();
         
-       lEncargado = new ArrayList<>();
+        lEncargado = new ArrayList<>();
         modeloTable = (DefaultTableModel) this.tableEncargado.getModel();
         btnActualizar.setEnabled(false);
         CargarUsuario();
     }
+    
+    
     
      public void CargarUsuario() {
         try {
@@ -47,19 +60,28 @@ public class EncargadoForm extends javax.swing.JFrame {
             
             
 
-            List<Encargado> ListP = CEncargado.findEncargadoEntities();           
+            List<Encargado> ListP = CEncargado.findEncargadoEntities(); 
+            List<TelefonoEncargado> ListTel = CTelUsuarios.findTelefonoEncargadoEntities(); 
 
             for (int i = 0; i < ListP.size(); i++) {
 
                 modeloTable.addRow(o);
                 Encargado encargadoPrueba = new Encargado();
                 encargadoPrueba = ListP.get(i);
-                 modeloTable.setValueAt(encargadoPrueba, i, 0);
+                modeloTable.setValueAt(encargadoPrueba, i, 0);
                 modeloTable.setValueAt(ListP.get(i).getIdEncargado(), i, 1);
                 modeloTable.setValueAt(ListP.get(i).getNombre(), i, 2);
                 modeloTable.setValueAt(ListP.get(i).getApellido(), i, 3);
                 modeloTable.setValueAt(ListP.get(i).getDireccion(), i, 4);
                 modeloTable.setValueAt(ListP.get(i).getDui(), i, 5);
+                
+                   for (int j = 0; j < ListTel.size(); j++) {   
+                    if(modeloTable.getValueAt(i, 1).toString().equals(ListTel.get(j).getIdEncargado().getIdEncargado().toString()))
+                    {
+                        modeloTable.setValueAt(ListTel.get(j).getTelefono(), i,6 ); 
+                        modeloTable.setValueAt(ListTel.get(j), i, 7); 
+                    }
+                }
                
             }
 
@@ -67,6 +89,8 @@ public class EncargadoForm extends javax.swing.JFrame {
         }
 
     }
+     
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -88,6 +112,8 @@ public class EncargadoForm extends javax.swing.JFrame {
         txtNombre = new javax.swing.JTextField();
         txtDireccion = new javax.swing.JTextField();
         txtDui = new javax.swing.JFormattedTextField();
+        txtTelefono = new javax.swing.JFormattedTextField();
+        jLabel9 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         btnAgregar = new javax.swing.JButton();
@@ -122,6 +148,14 @@ public class EncargadoForm extends javax.swing.JFrame {
             ex.printStackTrace();
         }
 
+        try {
+            txtTelefono.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        jLabel9.setText("Teléfono:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -138,17 +172,19 @@ public class EncargadoForm extends javax.swing.JFrame {
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(15, 15, 15)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel5)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jLabel3)
-                                    .addComponent(jLabel6))))
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addGap(20, 20, 20)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(txtDireccion, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
                                 .addComponent(txtApellido, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                                .addComponent(txtDui)))))
+                                .addComponent(txtDui)
+                                .addComponent(txtTelefono)))))
                 .addContainerGap(138, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -172,7 +208,11 @@ public class EncargadoForm extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtDui, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
-                .addContainerGap(110, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
@@ -246,11 +286,11 @@ public class EncargadoForm extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nombre", "Apellido", "Dirección", "Dui", "Entidad"
+                "Entidad", "ID", "Nombre", "Apellido", "Direccion", "Dui", "Teléfono", "EntidadTelefono"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -311,8 +351,19 @@ public class EncargadoForm extends javax.swing.JFrame {
         // TODO add your handling code here:
        
            try {
+               
+            Encargado encarNew = llenarEntidadUsuario();    
 
-            CEncargado.create(llenarEntidadUsuario());
+            CEncargado.create(encarNew);
+            
+             if(!this.txtTelefono.getText().trim().equals("-"))
+            {
+                TelefonoEncargado Telefonousuario = new TelefonoEncargado();               
+                Telefonousuario.setIdEncargado(encarNew);
+                Telefonousuario.setTelefono(txtTelefono.getText());
+                CTelUsuarios.create(Telefonousuario);
+            }
+            
             CargarUsuario();
             LimpearCampos();
 
@@ -331,6 +382,12 @@ public class EncargadoForm extends javax.swing.JFrame {
             int opcion = JOptionPane.showConfirmDialog(null, "Está seguro que desea eliminar al usuario "+bigDecimalValue.toString(), "Eliminar Usuario", JOptionPane.YES_NO_OPTION);
             if (opcion == 0) {
                 try {
+                if(TelefonoUsu)
+                {
+                    //BigDecimal bigDecimalValueTel = new BigDecimal(modeloTable.getValueAt(indice, 7).toString());
+                    CTelUsuarios.destroy(telUsuEdit.getIdTelefono());
+                }
+                    
                     CEncargado.destroy(bigDecimalValue);
                 } catch (NonexistentEntityException ex) {
                     Logger.getLogger(EncargadoForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -346,12 +403,13 @@ public class EncargadoForm extends javax.swing.JFrame {
 
         public void LimpearCampos() {
         updateUser = false;
-
+        TelefonoUsu = false;
+        
         txtNombre.setText("");
         txtApellido.setText("");
         txtDireccion.setText("");
         txtDui.setText("");
-
+        txtTelefono.setText("");
         btnActualizar.setEnabled(false);
 
     }
@@ -371,7 +429,17 @@ public class EncargadoForm extends javax.swing.JFrame {
                 txtDireccion.setText(modeloTable.getValueAt(indice, 4).toString());
                 txtDui.setText(modeloTable.getValueAt(indice, 5).toString());
                 
-               
+                  if(!(modeloTable.getValueAt(indice, 6)==null))
+                {
+                    txtTelefono.setText(modeloTable.getValueAt(indice, 6).toString());
+                    TelefonoUsu=true;
+                    telUsuEdit= (TelefonoEncargado) tableEncargado.getValueAt(tableEncargado.getSelectedRow(), 7);    
+                }                   
+                else
+                {
+                    txtTelefono.setText("");
+                    TelefonoUsu=false;
+                }
               
             } catch (Exception e) {
             }
@@ -388,6 +456,24 @@ public class EncargadoForm extends javax.swing.JFrame {
             EncargadoEdit.setDui(txtDui.getText());
             
             CEncargado.edit(EncargadoEdit);
+            
+            if(TelefonoUsu)
+            {
+               telUsuEdit.setIdEncargado(EncargadoEdit);
+                telUsuEdit.setTelefono(txtTelefono.getText());
+                CTelUsuarios.edit(telUsuEdit);
+                TelefonoUsu=false;
+            }
+            else if(!this.txtTelefono.getText().trim().equals("-"))
+            {
+                TelefonoUsu=true;
+                TelefonoEncargado Telefonousuario = new TelefonoEncargado();               
+                Telefonousuario.setIdEncargado(EncargadoEdit);
+                Telefonousuario.setTelefono(txtTelefono.getText());
+                CTelUsuarios.create(Telefonousuario);          
+            }
+            
+            
             LimpearCampos();
         } catch (NonexistentEntityException ex) {
             Logger.getLogger(EncargadoForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -473,6 +559,7 @@ public class EncargadoForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -481,5 +568,6 @@ public class EncargadoForm extends javax.swing.JFrame {
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JFormattedTextField txtDui;
     private javax.swing.JTextField txtNombre;
+    private javax.swing.JFormattedTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 }
