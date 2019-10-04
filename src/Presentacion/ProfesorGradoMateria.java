@@ -30,11 +30,14 @@ public class ProfesorGradoMateria extends javax.swing.JFrame {
     /**
      * Creates new form ProfesorGradoMateria
      */
-     UsuarioGrado UsuarioGrado = new UsuarioGrado();
-     MateriaUsuario MateriaUsuario=new MateriaUsuario();
+     UsuarioGrado UsuarioGrado;
+     MateriaUsuario MateriaUsuario;
      Usuario Nusuario = new Usuario();
+     Usuario EditUsuario;
      Grado Ngrado=new Grado();
+     Grado EditGrado;
      Materia Nmateria=new Materia();
+     Materia EditMateria;
      DefaultTableModel modeloTable;
      UsuarioGradoJpaController CUsuarioGrado= new UsuarioGradoJpaController();
      MateriaUsuarioJpaController CMateriaUsuario=new MateriaUsuarioJpaController();
@@ -234,6 +237,7 @@ public class ProfesorGradoMateria extends javax.swing.JFrame {
 
     public UsuarioGrado llenarEntidadUsuarioGrado() {
         try {          
+             UsuarioGrado = new UsuarioGrado();
              Nusuario.setIdUsuario(this.cbProfesor.getItemAt(this.cbProfesor.getSelectedIndex()).getIdUsuario());
              Ngrado.setIdGrado(this.cbGrado.getItemAt(this.cbGrado.getSelectedIndex()).getIdGrado());
              UsuarioGrado.setIdUsuario(Nusuario);
@@ -248,10 +252,11 @@ public class ProfesorGradoMateria extends javax.swing.JFrame {
         public MateriaUsuario llenarEntidadMateriaUsuario() {
 
         try {          
-            Nmateria.setIdMateria(this.cbMateria.getItemAt(this.cbMateria.getSelectedIndex()).getIdMateria());
-            MateriaUsuario.setIdMateria(Nmateria);
+            MateriaUsuario=new MateriaUsuario();
+            Materia Nwmateria=new Materia();
+            Nwmateria.setIdMateria(this.cbMateria.getItemAt(this.cbMateria.getSelectedIndex()).getIdMateria());
+            MateriaUsuario.setIdMateria(Nwmateria);
             MateriaUsuario.setIdUsuario(Nusuario);
-
             return MateriaUsuario;
         } catch (Exception e) {
         }
@@ -271,14 +276,14 @@ public class ProfesorGradoMateria extends javax.swing.JFrame {
                 modeloTable.setValueAt(ListA.get(i), i, 0);
                 modeloTable.setValueAt(ListA.get(i).getIdUsuario().getNombre()+" "+ListA.get(i).getIdUsuario().getApellido(), i, 1);
                 modeloTable.setValueAt(ListA.get(i).getIdUsuario(), i, 2);
-                for (int j = 0; j < ListM.size(); j++) {   
-                    if(modeloTable.getValueAt(i, 1).toString().equals(ListM.get(j).getIdUsuario().toString()))
-                    {
-                        modeloTable.setValueAt(ListM.get(j).getIdMateria().getMateria(), i, 3); 
-                        modeloTable.setValueAt(ListM.get(j).getIdMateria(), i, 4); 
-                        modeloTable.setValueAt(ListM.get(j), i, 5);
-                    }
-                }
+//                for (int j = 0; j < ListM.size(); j++) {   
+//                    if(modeloTable.getValueAt(i, 1).toString().equals(ListM.get(j).getIdUsuario().toString()))
+//                    {
+                        modeloTable.setValueAt(ListM.get(i).getIdMateria().getMateria(), i, 3); 
+                        modeloTable.setValueAt(ListM.get(i).getIdMateria(), i, 4); 
+                        modeloTable.setValueAt(ListM.get(i), i, 5);
+//                    }
+//                }
                 modeloTable.setValueAt(ListA.get(i).getIdGrado().getGrado(), i, 6);
                 modeloTable.setValueAt(ListA.get(i).getIdGrado(), i, 7);
             }
@@ -305,13 +310,13 @@ public class ProfesorGradoMateria extends javax.swing.JFrame {
                 int opcion = JOptionPane.showConfirmDialog(null, "Está seguro que desea actualizar al alumno", "Actualizar Alumno", JOptionPane.YES_NO_OPTION);
                 if (opcion == 0) 
                 {
-                    this.Ngrado.setIdGrado(this.cbGrado.getItemAt(this.cbGrado.getSelectedIndex()).getIdGrado());
-                    this.UsuarioGradoEdit.setIdGrado(Ngrado);
+                    this.EditGrado.setIdGrado(this.cbGrado.getItemAt(this.cbGrado.getSelectedIndex()).getIdGrado());
+                    this.UsuarioGradoEdit.setIdGrado(EditGrado);
                     this.UsuarioGradoEdit.setIdUsuario(Nusuario);
-                    this.Nusuario.setIdUsuario(this.cbProfesor.getItemAt(this.cbProfesor.getSelectedIndex()).getIdUsuario());
-                    this.Nmateria.setIdMateria(this.cbMateria.getItemAt(this.cbMateria.getSelectedIndex()).getIdMateria());
-                    this.MateriaUsuarioEdit.setIdUsuario(Nusuario);
-                    this.MateriaUsuarioEdit.setIdMateria(Nmateria);
+                    this.EditUsuario.setIdUsuario(this.cbProfesor.getItemAt(this.cbProfesor.getSelectedIndex()).getIdUsuario());
+                    this.EditMateria.setIdMateria(this.cbMateria.getItemAt(this.cbMateria.getSelectedIndex()).getIdMateria());
+                    this.MateriaUsuarioEdit.setIdUsuario(EditUsuario);
+                    this.MateriaUsuarioEdit.setIdMateria(EditMateria);
                     this.CUsuarioGrado.edit(UsuarioGradoEdit);
                     this.CMateriaUsuario.edit(MateriaUsuarioEdit);
                     this.CargarProfesor();
