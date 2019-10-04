@@ -38,9 +38,9 @@ public class usuariosForm extends javax.swing.JFrame {
     UsuarioJpaController CUsuarios = new UsuarioJpaController();
     TelefonoUsuarioJpaController CTelUsuarios = new TelefonoUsuarioJpaController();
     TipoUsuarioJpaController CTipoU = new TipoUsuarioJpaController();
-    Usuario usuario = new Usuario();
+    Usuario usuario;
     BigDecimal idUsua;
-    TelefonoUsuario Telefonousuario = new TelefonoUsuario();
+    TelefonoUsuario Telefonousuario ;
 
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
     boolean TelefonoUsu = false;
@@ -497,7 +497,7 @@ public class usuariosForm extends javax.swing.JFrame {
             int idTipoU;
             
             TipoUsuario tipoUEntidad = new TipoUsuario();
-
+            usuario= new Usuario();
             usuario.setNombre(txtNombre.getText());
             usuario.setApellido(txtApellido.getText());
             usuario.setFechaNac(formatter.parse(txtFechaNac.getText()));
@@ -521,6 +521,7 @@ public class usuariosForm extends javax.swing.JFrame {
         public TelefonoUsuario llenarEntidadTelUsuario() {
 
         try {         
+            Telefonousuario = new TelefonoUsuario();
             if(TelefonoUsu)
             {
                 Usuario usuariotel = new Usuario();
