@@ -276,14 +276,9 @@ public class ProfesorGradoMateria extends javax.swing.JFrame {
                 modeloTable.setValueAt(ListA.get(i), i, 0);
                 modeloTable.setValueAt(ListA.get(i).getIdUsuario().getNombre()+" "+ListA.get(i).getIdUsuario().getApellido(), i, 1);
                 modeloTable.setValueAt(ListA.get(i).getIdUsuario(), i, 2);
-//                for (int j = 0; j < ListM.size(); j++) {   
-//                    if(modeloTable.getValueAt(i, 1).toString().equals(ListM.get(j).getIdUsuario().toString()))
-//                    {
-                        modeloTable.setValueAt(ListM.get(i).getIdMateria().getMateria(), i, 3); 
-                        modeloTable.setValueAt(ListM.get(i).getIdMateria(), i, 4); 
-                        modeloTable.setValueAt(ListM.get(i), i, 5);
-//                    }
-//                }
+                modeloTable.setValueAt(ListM.get(i).getIdMateria().getMateria(), i, 3); 
+                modeloTable.setValueAt(ListM.get(i).getIdMateria(), i, 4); 
+                modeloTable.setValueAt(ListM.get(i), i, 5);
                 modeloTable.setValueAt(ListA.get(i).getIdGrado().getGrado(), i, 6);
                 modeloTable.setValueAt(ListA.get(i).getIdGrado(), i, 7);
             }
