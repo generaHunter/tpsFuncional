@@ -64,7 +64,7 @@ public class AlumnoForm extends javax.swing.JFrame {
                 String fechaTexto = formatter.format(fecha);
                 modeloTable.setValueAt(fechaTexto, i,3);
                 modeloTable.setValueAt(ListA.get(i).getIdEncargado().getNombre()+" "+ListA.get(i).getIdEncargado().getApellido(), i, 4);
-                //modeloTable.setValueAt(ListA.get(i).getIdEncargado().getIdEncargado().toString(), i, 5);
+                modeloTable.setValueAt(ListA.get(i).getIdEncargado().getIdEncargado().toString(), i, 5);
             }
 
         } catch (Exception e) {
@@ -153,14 +153,8 @@ public class AlumnoForm extends javax.swing.JFrame {
 
         jLabel6.setText("Encargado/a:");
 
-        txtFechaNac.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT))));
-        txtFechaNac.setText("/   / ");
+        txtFechaNac.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
         txtFechaNac.setToolTipText("");
-        txtFechaNac.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFechaNacActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -206,14 +200,14 @@ public class AlumnoForm extends javax.swing.JFrame {
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtFechaNac, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+                    .addComponent(txtFechaNac, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
                     .addComponent(cbEncargado))
-                .addContainerGap(81, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
@@ -270,7 +264,7 @@ public class AlumnoForm extends javax.swing.JFrame {
                 .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
                 .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         tablaAlumno.setModel(new javax.swing.table.DefaultTableModel(
@@ -337,18 +331,16 @@ public class AlumnoForm extends javax.swing.JFrame {
             // TODO add your handling code here:
             //dialogo1.show();
 
+            
             CAlumno.create(this.llenarEntidadAlumno());
+            JOptionPane.showMessageDialog(null,"Has dado click en agregar");
             CargarAlumno();     
                                  
-//                 JOptionPane.showMessageDialog(null,cbEncargado.getItemAt(cbEncargado.getSelectedIndex()).getIdEncargado());
+//                 
         } catch (Exception ex) {
            JOptionPane.showMessageDialog(null, ex);
         }
     }//GEN-LAST:event_btNuevoActionPerformed
-
-    private void txtFechaNacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaNacActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtFechaNacActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
@@ -380,16 +372,17 @@ public class AlumnoForm extends javax.swing.JFrame {
 
     private void tablaAlumnoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaAlumnoMouseClicked
          try {  
-                int indice = this.tablaAlumno.getSelectedRow();
+             int indice = this.tablaAlumno.getSelectedRow();
+             this.btnUpdate.setEnabled(true);
+             this.btnDelete.setEnabled(true);
+             this.btNuevo.setEnabled(false);
                 if (indice > -1) 
                 {
                        txtNombre.setText(modeloTable.getValueAt(indice, 1).toString());
                        txtApellido.setText(modeloTable.getValueAt(indice, 2).toString());
                        txtFechaNac.setText(modeloTable.getValueAt(indice, 3).toString());
                        AlumnoEdit = (Alumno) tablaAlumno.getValueAt(tablaAlumno.getSelectedRow(), 0);
-                       this.btnUpdate.setEnabled(true);
-                       this.btnDelete.setEnabled(true);
-                       this.btNuevo.setEnabled(false);
+
                        //this.cbEncargado.setSelectedItem((modeloTable.getValueAt(indice, 4)));
                 }
          } catch (Exception e) 

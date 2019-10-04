@@ -599,9 +599,10 @@ public class usuariosForm extends javax.swing.JFrame {
                 else
                 {
                     txtTelefono.setText("");
+                    TelefonoUsu=false;
                 }
                 usuarioEdit = (Usuario) tablaUsuarios.getValueAt(tablaUsuarios.getSelectedRow(), 0);
-                 JOptionPane.showMessageDialog(null, tablaUsuarios.getValueAt(tablaUsuarios.getSelectedRow(), 0).toString());
+                 //JOptionPane.showMessageDialog(null, tablaUsuarios.getValueAt(tablaUsuarios.getSelectedRow(), 0).toString());
                 
             } catch (Exception e) {
             }
@@ -670,8 +671,14 @@ public class usuariosForm extends javax.swing.JFrame {
             }
             else if(!this.txtTelefono.getText().trim().equals("-"))
             {
+                //TelefonoUsu=true;
+                //CTelUsuarios.create(llenarEntidadTelUsuario());
+                
                 TelefonoUsu=true;
-                CTelUsuarios.create(llenarEntidadTelUsuario());
+                TelefonoUsuario Telefonousuario = new TelefonoUsuario();               
+                Telefonousuario.setIdUsuario(usuarioEdit);
+                Telefonousuario.setTelefono(txtTelefono.getText());
+                CTelUsuarios.create(Telefonousuario);    
             }
             
             CargarUsuario();

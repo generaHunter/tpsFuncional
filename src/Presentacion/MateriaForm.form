@@ -126,7 +126,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="btNuevo">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Agregar Nuevo Alumno"/>
+            <Property name="text" type="java.lang.String" value="Agregar Nueva Materia"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btNuevoActionPerformed"/>
@@ -134,7 +134,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnDelete">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Eliminar Alumno"/>
+            <Property name="text" type="java.lang.String" value="Eliminar Materia"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteActionPerformed"/>
@@ -142,7 +142,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnUpdate">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Actualizar Alumno"/>
+            <Property name="text" type="java.lang.String" value="Actualizar Materia"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUpdateActionPerformed"/>
