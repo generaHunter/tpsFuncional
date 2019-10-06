@@ -352,17 +352,21 @@ public class EncargadoForm extends javax.swing.JFrame {
        
            try {
                
-            Encargado encarNew = llenarEntidadUsuario();    
+            Encargado encarNew;    
 
-            CEncargado.create(encarNew);
-            
              if(!this.txtTelefono.getText().trim().equals("-"))
             {
+                encarNew=new Encargado();
                 TelefonoEncargado Telefonousuario = new TelefonoEncargado();               
                 Telefonousuario.setIdEncargado(encarNew);
                 Telefonousuario.setTelefono(txtTelefono.getText());
                 CTelUsuarios.create(Telefonousuario);
             }
+             else
+             {
+                 encarNew = llenarEntidadUsuario();
+                 CEncargado.create(encarNew);
+             }
             
             CargarUsuario();
             LimpearCampos();
@@ -459,7 +463,7 @@ public class EncargadoForm extends javax.swing.JFrame {
             
             if(TelefonoUsu)
             {
-               telUsuEdit.setIdEncargado(EncargadoEdit);
+                telUsuEdit.setIdEncargado(EncargadoEdit);
                 telUsuEdit.setTelefono(txtTelefono.getText());
                 CTelUsuarios.edit(telUsuEdit);
                 TelefonoUsu=false;
