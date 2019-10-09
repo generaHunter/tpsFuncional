@@ -40,9 +40,6 @@ public class Matricula {
 
     public void setIDAlumno(int IDAlumno) {
         this.IDAlumno = IDAlumno;
-    }
-
-
-    
+    }       
     
 }

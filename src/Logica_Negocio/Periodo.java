@@ -5,8 +5,10 @@
  */
 package Logica_Negocio;
 
+import Datos.PeriodoJpaController;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.swing.JComboBox;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -89,7 +92,23 @@ public class Periodo implements Serializable {
 
     @Override
     public String toString() {
-        return "Logica_Negocio.Periodo[ idPeriodo=" + idPeriodo + " ]";
+        return periodo;
     }
     
+    public void ComboPeriodo(JComboBox<Periodo> cbPeriodo)
+    {
+        try {
+            PeriodoJpaController CPeriodo= new PeriodoJpaController();
+            List<Periodo> ListPeriodo = CPeriodo.findPeriodoEntities();
+            for (int i = 0; i < ListPeriodo.size(); i++) {             
+                cbPeriodo.addItem(
+                   new Periodo(
+                           ListPeriodo.get(i).getIdPeriodo(),
+                           ListPeriodo.get(i).getPeriodo()
+                   )           
+                ); 
+            }
+        } catch (Exception e) {
+        }
+    }
 }

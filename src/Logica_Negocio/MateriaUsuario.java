@@ -5,9 +5,12 @@
  */
 package Logica_Negocio;
 
+import Datos.MateriaUsuarioJpaController;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,9 +20,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.swing.JComboBox;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -32,6 +38,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "MateriaUsuario.findAll", query = "SELECT m FROM MateriaUsuario m")
     , @NamedQuery(name = "MateriaUsuario.findByIdMatusu", query = "SELECT m FROM MateriaUsuario m WHERE m.idMatusu = :idMatusu")})
 public class MateriaUsuario implements Serializable {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMatusu")
+    private List<AlumnoProfesor> alumnoProfesorList;
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -51,8 +60,10 @@ public class MateriaUsuario implements Serializable {
     public MateriaUsuario() {
     }
 
-    public MateriaUsuario(BigDecimal idMatusu) {
+    public MateriaUsuario(BigDecimal idMatusu,Materia idMateria,Usuario idUsuario) {
         this.idMatusu = idMatusu;
+        this.idMateria=idMateria;
+        this.idUsuario=idUsuario;
     }
 
     public BigDecimal getIdMatusu() {
@@ -101,7 +112,39 @@ public class MateriaUsuario implements Serializable {
 
     @Override
     public String toString() {
-        return  idMatusu.toString();
+        return  idMateria.getMateria();
+    }
+    
+        public void ComboMateriaUsuario(JComboBox<MateriaUsuario> cbMatUsu,BigDecimal idProfesor)
+    {
+        try {
+            cbMatUsu.removeAllItems();
+            MateriaUsuarioJpaController CMatUsu= new MateriaUsuarioJpaController();
+            List<MateriaUsuario> ListMatUsu = CMatUsu.findMateriaUsuarioEntities();
+            for (int i = 0; i < ListMatUsu.size(); i++) {
+                if(ListMatUsu.get(i).idUsuario.getIdUsuario().equals(idProfesor))
+                {
+                    cbMatUsu.addItem(
+                            new MateriaUsuario(
+                            ListMatUsu.get(i).idMatusu,
+                            ListMatUsu.get(i).idMateria,
+                            ListMatUsu.get(i).idUsuario
+                            )           
+                    );                 
+                }
+            }
+        } catch (Exception e) {
+        }
+        
+    }
+
+    @XmlTransient
+    public List<AlumnoProfesor> getAlumnoProfesorList() {
+        return alumnoProfesorList;
+    }
+
+    public void setAlumnoProfesorList(List<AlumnoProfesor> alumnoProfesorList) {
+        this.alumnoProfesorList = alumnoProfesorList;
     }
     
 }

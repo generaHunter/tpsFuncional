@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
@@ -24,10 +25,11 @@ import javax.persistence.criteria.Root;
  */
 public class PeriodoJpaController implements Serializable {
 
-    public PeriodoJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public PeriodoJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("esucelaProyectoPU");
     }
     private EntityManagerFactory emf = null;
+
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
