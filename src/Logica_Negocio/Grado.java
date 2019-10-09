@@ -39,6 +39,9 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Grado implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idGrado")
+    private List<Matricula> matriculaList;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idGrado")
     private List<UsuarioGrado> usuarioGradoList;
 
     private static final long serialVersionUID = 1L;
@@ -130,6 +133,15 @@ public class Grado implements Serializable {
             }
         } catch (Exception e) {
         }
+    }
+
+    @XmlTransient
+    public List<Matricula> getMatriculaList() {
+        return matriculaList;
+    }
+
+    public void setMatriculaList(List<Matricula> matriculaList) {
+        this.matriculaList = matriculaList;
     }
     
     

@@ -13,30 +13,33 @@ import java.sql.SQLException;
  */
 public class DB {
     
-    private static Connection conn=null;
-    private static String user="system";
-    private static String pass="admin";
-    private static String url="jdbc:oracle:thin:@localhost:1521:xe"; 
+    private Connection conn=null;
+    private  String user="system";
+    private  String pass="admin";
+    private  String url="jdbc:oracle:thin:@localhost:1521:xe"; 
     
-    public static Connection getConection()
+    public DB()
     {
-        try {
+         try {
                 Class.forName("oracle.jdbc.driver.OracleDriver");
                 conn=DriverManager.getConnection(url,user,pass);
                 conn.setAutoCommit(false);
-                if (conn!=null)
-                {
-                    System.out.println("Conexion Exitosa");
-                }
-                else
-                {
-                     System.out.println("Error en la conexión");
-                }
-                   
-                
+//                if (conn!=null)
+//                {
+//                    System.out.println("Conexion Exitosa");
+//                }
+//                else
+//                {
+//                     System.out.println("Error en la conexión");
+//                }                   
+               
             } catch (SQLException | ClassNotFoundException ex) {
                 System.out.println("Error en la conexión de la base de datos"+ex.toString());
             }
+    }
+    
+    public  Connection getConection()
+    {
         return conn;
     }
     
@@ -50,14 +53,14 @@ public class DB {
             }
     }
     
-    public static void main(String[] args) {
-//        try {
-//                Class.forName("oracle.jdbc.driver.OracleDriver");
-//                Connection  conexion = DriverManager.getConnection("jdbc:oracle:thin:@localhot:1521:orcl","escuela","admin");
-//            } catch (SQLException | ClassNotFoundException ex) {
-//                System.out.println("Error en la conexión de la base de datos");
-//            }
-        DB d = new DB();
-        d.getConection();
-    }
+//    public static void main(String[] args) {
+////        try {
+////                Class.forName("oracle.jdbc.driver.OracleDriver");
+////                Connection  conexion = DriverManager.getConnection("jdbc:oracle:thin:@localhot:1521:orcl","escuela","admin");
+////            } catch (SQLException | ClassNotFoundException ex) {
+////                System.out.println("Error en la conexión de la base de datos");
+////            }
+//        DB d = new DB();
+//        d.getConection();
+//    }
 }
