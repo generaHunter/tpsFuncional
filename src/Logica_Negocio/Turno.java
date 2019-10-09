@@ -5,8 +5,10 @@
  */
 package Logica_Negocio;
 
+import Datos.TurnoJpaController;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +19,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.swing.JComboBox;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -91,10 +94,30 @@ public class Turno implements Serializable {
         }
         return true;
     }
+    
+    
 
     @Override
     public String toString() {
-        return "Logica_Negocio.Turno[ idTurno=" + idTurno + " ]";
+       // return "Logica_Negocio.Turno[ idTurno=" + idTurno + " ]";
+       return getTurno();
+    }
+    
+        public void ComboTurno(JComboBox<Turno> cbTurno)
+    {
+        try {
+            TurnoJpaController CTurno = new TurnoJpaController();
+            List<Turno> ListTurno = CTurno.findTurnoEntities();
+            for (int i = 0; i < ListTurno.size(); i++) {             
+                cbTurno.addItem(
+                   new Turno(
+                           ListTurno.get(i).getIdTurno(),
+                           ListTurno.get(i).getTurno()
+                   )           
+                ); 
+            }
+        } catch (Exception e) {
+        }
     }
     
 }
