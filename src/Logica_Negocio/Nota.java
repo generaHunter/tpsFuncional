@@ -16,12 +16,14 @@ public class Nota {
      private BigDecimal idMatusu;
      private BigDecimal idPeriodo;
      private BigDecimal idCalificacion;
+     private BigDecimal idAlumno;
     
-    public Nota(BigDecimal idNota,BigDecimal idMatusu,BigDecimal idPeriodo,BigDecimal idCalificacion) {
+    public Nota(BigDecimal idNota,BigDecimal idMatusu,BigDecimal idPeriodo,BigDecimal idCalificacion,BigDecimal idAlumno) {
     this.idNota = idNota;
     this.idMatusu=idMatusu;
     this.idPeriodo=idPeriodo;
     this.idCalificacion=idCalificacion;
+    this.idAlumno=idAlumno;
     }
     
     public BigDecimal getIdNota() {
@@ -54,6 +56,14 @@ public class Nota {
 
     public void setIdCalificacion(BigDecimal idCalificacion) {
         this.idCalificacion = idCalificacion;
+    }
+    
+    public BigDecimal getIdAlumno() {
+        return idAlumno;
+    }
+
+    public void setIdAlumno(BigDecimal idAlumno) {
+        this.idAlumno = idAlumno;
     }
  
 

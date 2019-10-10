@@ -33,11 +33,8 @@ public class ProfesorGradoMateria extends javax.swing.JFrame {
      UsuarioGrado UsuarioGrado;
      MateriaUsuario MateriaUsuario;
      Usuario Nusuario = new Usuario();
-     Usuario EditUsuario;
      Grado Ngrado=new Grado();
-     Grado EditGrado;
      Materia Nmateria=new Materia();
-     Materia EditMateria;
      DefaultTableModel modeloTable;
      UsuarioGradoJpaController CUsuarioGrado= new UsuarioGradoJpaController();
      MateriaUsuarioJpaController CMateriaUsuario=new MateriaUsuarioJpaController();
@@ -170,11 +167,11 @@ public class ProfesorGradoMateria extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Profesor", "EntidadUsu", "Materia", "EntidadMateria", "EntidadMatxUsu", "Grado", "EntidadGrado"
+                "ID", "Profesor", "EntidadUsu", "Materia", "EntidadMateria", "EntidadMatxUsu", "Grado", "EntidadGrado", "EntidadMatxUsu"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -278,9 +275,10 @@ public class ProfesorGradoMateria extends javax.swing.JFrame {
                 modeloTable.setValueAt(ListA.get(i).getIdUsuario(), i, 2);
                 modeloTable.setValueAt(ListM.get(i).getIdMateria().getMateria(), i, 3); 
                 modeloTable.setValueAt(ListM.get(i).getIdMateria(), i, 4); 
-                modeloTable.setValueAt(ListM.get(i), i, 5);
+                modeloTable.setValueAt(ListM.get(i).getIdMatusu(), i, 5);
                 modeloTable.setValueAt(ListA.get(i).getIdGrado().getGrado(), i, 6);
                 modeloTable.setValueAt(ListA.get(i).getIdGrado(), i, 7);
+                modeloTable.setValueAt(ListM.get(i), i, 8);
             }
 
         } catch (Exception e) {
@@ -302,16 +300,18 @@ public class ProfesorGradoMateria extends javax.swing.JFrame {
     private void btnActualizatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizatActionPerformed
         // TODO add your handling code here:
         try {
-                int opcion = JOptionPane.showConfirmDialog(null, "Está seguro que desea actualizar al alumno", "Actualizar Alumno", JOptionPane.YES_NO_OPTION);
+                int opcion = JOptionPane.showConfirmDialog(null, "Está seguro que desea actualizar ", "Actualizar ", JOptionPane.YES_NO_OPTION);
                 if (opcion == 0) 
                 {
-                    this.EditGrado.setIdGrado(this.cbGrado.getItemAt(this.cbGrado.getSelectedIndex()).getIdGrado());
-                    this.UsuarioGradoEdit.setIdGrado(EditGrado);
+                    this.Ngrado.setIdGrado(this.cbGrado.getItemAt(this.cbGrado.getSelectedIndex()).getIdGrado());
+                    this.Nusuario.setIdUsuario(this.cbProfesor.getItemAt(this.cbProfesor.getSelectedIndex()).getIdUsuario());
+                    this.Nmateria.setIdMateria(this.cbMateria.getItemAt(this.cbMateria.getSelectedIndex()).getIdMateria());
+                   
+                    this.UsuarioGradoEdit.setIdGrado(Ngrado);
                     this.UsuarioGradoEdit.setIdUsuario(Nusuario);
-                    this.EditUsuario.setIdUsuario(this.cbProfesor.getItemAt(this.cbProfesor.getSelectedIndex()).getIdUsuario());
-                    this.EditMateria.setIdMateria(this.cbMateria.getItemAt(this.cbMateria.getSelectedIndex()).getIdMateria());
-                    this.MateriaUsuarioEdit.setIdUsuario(EditUsuario);
-                    this.MateriaUsuarioEdit.setIdMateria(EditMateria);
+                    this.MateriaUsuarioEdit.setIdUsuario(Nusuario);
+                    this.MateriaUsuarioEdit.setIdMateria(Nmateria);
+                    
                     this.CUsuarioGrado.edit(UsuarioGradoEdit);
                     this.CMateriaUsuario.edit(MateriaUsuarioEdit);
                     this.CargarProfesor();
@@ -320,7 +320,7 @@ public class ProfesorGradoMateria extends javax.swing.JFrame {
             } catch (Exception e)     
              {
 
-               JOptionPane.showMessageDialog(null, e);
+               JOptionPane.showMessageDialog(null, e+""+this.cbGrado.getItemAt(this.cbGrado.getSelectedIndex()).getIdGrado());
              }
 
     }//GEN-LAST:event_btnActualizatActionPerformed
@@ -350,6 +350,8 @@ public class ProfesorGradoMateria extends javax.swing.JFrame {
                 int indice = this.tablaProfesor.getSelectedRow();
                 if (indice > -1) 
                 {   
+                    MateriaUsuarioEdit  = (MateriaUsuario) tablaProfesor.getValueAt(tablaProfesor.getSelectedRow(), 8);
+                    UsuarioGradoEdit    = (UsuarioGrado) tablaProfesor.getValueAt(tablaProfesor.getSelectedRow(), 0); 
                    for(int i = 0; i < this.cbProfesor.getItemCount(); i++)
                    {
                        if(this.cbProfesor.getItemAt(i).toString().equals(modeloTable.getValueAt(indice, 1).toString()))
@@ -377,12 +379,11 @@ public class ProfesorGradoMateria extends javax.swing.JFrame {
                        }
                        
                    }
-                    UsuarioGradoEdit    = (UsuarioGrado) tablaProfesor.getValueAt(tablaProfesor.getSelectedRow(), 0);
-                    MateriaUsuarioEdit  = (MateriaUsuario) tablaProfesor.getValueAt(tablaProfesor.getSelectedRow(), 5);
+                    
                 }
          } catch (Exception e) 
             {
-                
+                 JOptionPane.showMessageDialog(null, e);
             }
 
     }//GEN-LAST:event_tablaProfesorMouseClicked
