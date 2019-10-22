@@ -78,6 +78,7 @@ public class AlumnoForm extends javax.swing.JFrame {
             Alumno.setNombre(txtNombre.getText());
             Alumno.setApellido(txtApellido.getText());
             Alumno.setFechaNac(formatter.parse(txtFechaNac.getText()));
+            
             NEncargado.setIdEncargado(cbEncargado.getItemAt(cbEncargado.getSelectedIndex()).getIdEncargado());
             Alumno.setIdEncargado(NEncargado);
             return Alumno;
@@ -289,6 +290,11 @@ public class AlumnoForm extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(tablaAlumno);
+        if (tablaAlumno.getColumnModel().getColumnCount() > 0) {
+            tablaAlumno.getColumnModel().getColumn(5).setMinWidth(0);
+            tablaAlumno.getColumnModel().getColumn(5).setPreferredWidth(0);
+            tablaAlumno.getColumnModel().getColumn(5).setMaxWidth(0);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -330,11 +336,28 @@ public class AlumnoForm extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             //dialogo1.show();
+            if (txtNombre.getText().length() > 0) {
+                if (txtApellido.getText().length() > 0) {
+                    if (txtFechaNac.getText().length() > 0) {
+                        CAlumno.create(this.llenarEntidadAlumno());
+                        //JOptionPane.showMessageDialog(null,"Has dado click en agregar");
+                        CargarAlumno();   
+                        limpiar();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Debe de ingresar la fecha de nacimiento del alumno");
 
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Debe de ingresar el apellido del alumno");
+
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Debe de ingresar el nombre del alumno");
+
+            }
+        
             
-            CAlumno.create(this.llenarEntidadAlumno());
-            JOptionPane.showMessageDialog(null,"Has dado click en agregar");
-            CargarAlumno();     
+         
                                  
 //                 
         } catch (Exception ex) {
@@ -342,6 +365,8 @@ public class AlumnoForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btNuevoActionPerformed
 
+    
+    
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
         int indice = this.tablaAlumno.getSelectedRow();
@@ -404,17 +429,35 @@ public class AlumnoForm extends javax.swing.JFrame {
                 int opcion = JOptionPane.showConfirmDialog(null, "Está seguro que desea actualizar al alumno", "Actualizar Alumno", JOptionPane.YES_NO_OPTION);
                 if (opcion == 0) 
                 {
-                    AlumnoEdit.setNombre(txtNombre.getText());
-                    AlumnoEdit.setApellido(txtApellido.getText());
-                    AlumnoEdit.setFechaNac(formatter.parse(txtFechaNac.getText()));  
-                    NEncargado.setIdEncargado(cbEncargado.getItemAt(cbEncargado.getSelectedIndex()).getIdEncargado());
-                    AlumnoEdit.setIdEncargado(NEncargado);
-                    CAlumno.edit(AlumnoEdit);
-                    CargarAlumno();
-                    this.btnUpdate.setEnabled(false);
-                    this.btnDelete.setEnabled(false);
-                    this.btNuevo.setEnabled(true);
-                    this.limpiar();
+                    
+                                 if (txtNombre.getText().length() > 0) {
+                        if (txtApellido.getText().length() > 0) {
+                            if (txtFechaNac.getText().length() > 0) {
+                                AlumnoEdit.setNombre(txtNombre.getText());
+                                AlumnoEdit.setApellido(txtApellido.getText());
+                                AlumnoEdit.setFechaNac(formatter.parse(txtFechaNac.getText()));
+                                NEncargado.setIdEncargado(cbEncargado.getItemAt(cbEncargado.getSelectedIndex()).getIdEncargado());
+                                AlumnoEdit.setIdEncargado(NEncargado);
+                                CAlumno.edit(AlumnoEdit);
+                                CargarAlumno();
+                                this.btnUpdate.setEnabled(false);
+                                this.btnDelete.setEnabled(false);
+                                this.btNuevo.setEnabled(true);
+                                this.limpiar();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Debe de ingresar la fecha de nacimiento del alumno");
+
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Debe de ingresar el apellido del alumno");
+
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Debe de ingresar el nombre del alumno");
+
+            }
+                    
+ 
                 }
                 else
                 {

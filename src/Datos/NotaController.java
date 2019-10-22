@@ -5,6 +5,7 @@
  */
 package Datos;
 
+import ConexionDB.Conexion;
 import Presentacion.NotasForm;
 import java.sql.CallableStatement;
 import java.sql.SQLException;
@@ -24,13 +25,16 @@ import Logica_Negocio.Usuario;
  */
 public class NotaController {
     DB conn;
+    Conexion conR ;
             
     public void insertar_nota(Alumno NotaAlumno,Materia NotaMateria,Usuario NotaUsuario,Periodo NotaPeriodo,Calificacion NotaNueva)throws SQLException
     {
-        conn=new DB();
+        //conn=new DB();
+        conR = new Conexion();
             CallableStatement pstm;
         try {
-            pstm = conn.getConection().prepareCall("{call insertar_nota(?,?,?,?,?)}");
+            //pstm = conn.getConection().prepareCall("{call insertar_nota(?,?,?,?,?)}");
+            pstm = conR.getConnection().prepareCall("{call insertar_nota(?,?,?,?,?)}");
                     
                         pstm.setInt(1, Integer.parseInt(NotaAlumno.getIdAlumno().toString()));
                         pstm.setInt(2, Integer.parseInt(NotaMateria.getIdMateria().toString()));
@@ -38,7 +42,9 @@ public class NotaController {
                         pstm.setString(4, NotaPeriodo.getPeriodo());
                         pstm.setDouble(5, NotaNueva.getCalificacion());
                         pstm.execute();
-                        conn.getConection().close();
+                        
+                        //conn.getConection().close();
+                         conR.getConnection().close();
         } catch (SQLException ex) {
             Logger.getLogger(NotasForm.class.getName()).log(Level.SEVERE, null, ex);     
         }

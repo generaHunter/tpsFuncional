@@ -173,7 +173,7 @@ public class TipoUsuarioForm extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -186,6 +186,11 @@ public class TipoUsuarioForm extends javax.swing.JFrame {
             }
         });
         jScrollPane2.setViewportView(tableTipo);
+        if (tableTipo.getColumnModel().getColumnCount() > 0) {
+            tableTipo.getColumnModel().getColumn(0).setMinWidth(0);
+            tableTipo.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tableTipo.getColumnModel().getColumn(0).setMaxWidth(0);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -233,15 +238,22 @@ public class TipoUsuarioForm extends javax.swing.JFrame {
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         // TODO add your handling code here
         
-        TipoUsuario tipoNew = new TipoUsuario();
         
-        tipoNew.setTipo(txtTipo.getText());
-        try {
-            CTipoU.create(tipoNew);
-            cargarTipos();
-        } catch (Exception ex) {
-            Logger.getLogger(TipoUsuarioForm.class.getName()).log(Level.SEVERE, null, ex);
+        if (txtTipo.getText().length() > 0) {
+            TipoUsuario tipoNew = new TipoUsuario();
+
+            tipoNew.setTipo(txtTipo.getText());
+            try {
+                CTipoU.create(tipoNew);
+                cargarTipos();
+                txtTipo.setText("");
+            } catch (Exception ex) {
+                Logger.getLogger(TipoUsuarioForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "El campo se encuentra vacio");
         }
+     
         
     }//GEN-LAST:event_btnAgregarActionPerformed
 
@@ -269,13 +281,20 @@ public class TipoUsuarioForm extends javax.swing.JFrame {
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         // TODO add your handling code here:
         
-        tipoEdit.setTipo(txtTipo.getText());
-        try {
-            CTipoU.edit(tipoEdit);
-        } catch (Exception ex) {
-            Logger.getLogger(TipoUsuarioForm.class.getName()).log(Level.SEVERE, null, ex);
+        if (txtTipo.getText().length() > 0) {
+            tipoEdit.setTipo(txtTipo.getText());
+            try {
+                CTipoU.edit(tipoEdit);
+            } catch (Exception ex) {
+                Logger.getLogger(TipoUsuarioForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            cargarTipos();
+            txtTipo.setText("");
+        } else {
+            JOptionPane.showMessageDialog(null, "El campo se encuentra vacio");
         }
-        cargarTipos();
+        
+
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed

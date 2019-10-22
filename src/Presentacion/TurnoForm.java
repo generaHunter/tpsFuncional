@@ -151,7 +151,7 @@ public class TurnoForm extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -164,6 +164,11 @@ public class TurnoForm extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(tableTurnos);
+        if (tableTurnos.getColumnModel().getColumnCount() > 0) {
+            tableTurnos.getColumnModel().getColumn(0).setMinWidth(0);
+            tableTurnos.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tableTurnos.getColumnModel().getColumn(0).setMaxWidth(0);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -202,15 +207,22 @@ public class TurnoForm extends javax.swing.JFrame {
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         // TODO add your handling code here:
         
-        Turno turnoNew = new Turno();
-        turnoNew.setTurno(txtTurno.getText());
-        
-        try {
-            CTurno.create(turnoNew);
-        } catch (Exception ex) {
-            Logger.getLogger(TurnoForm.class.getName()).log(Level.SEVERE, null, ex);
+        if (txtTurno.getText().length() > 0) {
+            Turno turnoNew = new Turno();
+            turnoNew.setTurno(txtTurno.getText());
+
+            try {
+                CTurno.create(turnoNew);
+            } catch (Exception ex) {
+                Logger.getLogger(TurnoForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            cargarTurno();
+            txtTurno.setText("");
         }
-        cargarTurno();
+        else {
+        JOptionPane.showMessageDialog(null, "El campo esta vacio");
+        }
+
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void tableTurnosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableTurnosMouseClicked
@@ -230,13 +242,20 @@ public class TurnoForm extends javax.swing.JFrame {
     private void btnActualizatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizatActionPerformed
         // TODO add your handling code here:
         
-        turnoEdit.setTurno(txtTurno.getText());
-        try {
-            CTurno.edit(turnoEdit);
-        } catch (Exception ex) {
-            Logger.getLogger(TurnoForm.class.getName()).log(Level.SEVERE, null, ex);
+        if (txtTurno.getText().length() > 0) {
+            turnoEdit.setTurno(txtTurno.getText());
+            try {
+                CTurno.edit(turnoEdit);
+            } catch (Exception ex) {
+                Logger.getLogger(TurnoForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            cargarTurno();
+            txtTurno.setText("");
+
+        } else {
+            JOptionPane.showMessageDialog(null, "El campo esta vacio");
         }
-        cargarTurno();
+
     }//GEN-LAST:event_btnActualizatActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -247,6 +266,7 @@ public class TurnoForm extends javax.swing.JFrame {
             
             try {
                 CTurno.destroy(turnoEdit.getIdTurno());
+                txtTurno.setText("");
                 cargarTurno();
             } catch (NonexistentEntityException ex) {
                 Logger.getLogger(TurnoForm.class.getName()).log(Level.SEVERE, null, ex);

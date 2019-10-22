@@ -250,9 +250,16 @@ public class MateriaForm extends javax.swing.JFrame {
     private void btNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNuevoActionPerformed
         try {
             // TODO add your handling code here:
-            CMateria.create(this.llenarEntidadMaterias());
-            CargarMaterias();
-            this.limpiar();
+            
+            if (txtNombre.getText().length() > 0) {
+                CMateria.create(this.llenarEntidadMaterias());
+                CargarMaterias();
+                this.limpiar();
+            }
+            else {
+            JOptionPane.showMessageDialog(null, "Falta ingresar el nombre de la materia");
+            }
+          
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
@@ -294,13 +301,19 @@ public class MateriaForm extends javax.swing.JFrame {
             int opcion = JOptionPane.showConfirmDialog(null, "Está seguro que desea actualizar la materia", "Actualizar Materia", JOptionPane.YES_NO_OPTION);
             if (opcion == 0)
             {
-                MateriaEdit.setMateria(txtNombre.getText());
-                CMateria.edit(MateriaEdit);
-                CargarMaterias();
-                this.btnUpdate.setEnabled(false);
-                this.btnDelete.setEnabled(false);
-                this.btNuevo.setEnabled(true);
-                this.limpiar();
+                if (txtNombre.getText().length() > 0) {
+                    MateriaEdit.setMateria(txtNombre.getText());
+                    CMateria.edit(MateriaEdit);
+                    CargarMaterias();
+                    this.btnUpdate.setEnabled(false);
+                    this.btnDelete.setEnabled(false);
+                    this.btNuevo.setEnabled(true);
+                    this.limpiar();
+                }
+                else{
+                    JOptionPane.showMessageDialog(null,"Debe de ingresar el nombre de la materia");
+                }
+            
             }
             else
             {
