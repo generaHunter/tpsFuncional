@@ -153,7 +153,7 @@ public class GradoForm extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -166,6 +166,11 @@ public class GradoForm extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(tableGrado);
+        if (tableGrado.getColumnModel().getColumnCount() > 0) {
+            tableGrado.getColumnModel().getColumn(0).setMinWidth(0);
+            tableGrado.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tableGrado.getColumnModel().getColumn(0).setMaxWidth(0);
+        }
 
         jLabel3.setText("Grados Existentes:");
 
@@ -209,16 +214,23 @@ public class GradoForm extends javax.swing.JFrame {
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         // TODO add your handling code here:
         
-        Grado gradoNew = new Grado();
-        
-        gradoNew.setGrado(txtGrado.getText());
-        
-        try {
-            CGrado.create(gradoNew);
-        } catch (Exception ex) {
-            Logger.getLogger(GradoForm.class.getName()).log(Level.SEVERE, null, ex);
+        if (txtGrado.getText().length() > 0) {
+            Grado gradoNew = new Grado();
+
+            gradoNew.setGrado(txtGrado.getText());
+
+            try {
+                CGrado.create(gradoNew);
+                
+            } catch (Exception ex) {
+                Logger.getLogger(GradoForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            cargarGrado();
+            txtGrado.setText("");
+        }else {
+        JOptionPane.showMessageDialog(null, "Falta ingresar el nombre del grado");
         }
-        cargarGrado();
+
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void tableGradoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableGradoMouseClicked
@@ -237,7 +249,8 @@ public class GradoForm extends javax.swing.JFrame {
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         // TODO add your handling code here:
         
-        gradoEdit.setGrado(txtGrado.getText());
+       if (txtGrado.getText().length() > 0) {
+            gradoEdit.setGrado(txtGrado.getText());
         
         try {
             CGrado.edit(gradoEdit);
@@ -245,6 +258,12 @@ public class GradoForm extends javax.swing.JFrame {
             Logger.getLogger(GradoForm.class.getName()).log(Level.SEVERE, null, ex);
         }
         cargarGrado();
+        txtGrado.setText("");
+       }
+           else {
+        JOptionPane.showMessageDialog(null, "Falta ingresar el nombre del grado");
+        }
+   
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed

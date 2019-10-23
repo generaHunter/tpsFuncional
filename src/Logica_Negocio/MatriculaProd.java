@@ -3,20 +3,39 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modeloClases;
+package Logica_Negocio;
 
 /**
  *
  * @author ronal
  */
-public class Matricula {
+public class MatriculaProd {
     
     private String gradoName;
     private String turnoName;
     private int IDAlumno;
+    private int IdMatricula;
+    private int opcion;
+
+    public int getOpcion() {
+        return opcion;
+    }
+
+    public void setOpcion(int opcion) {
+        this.opcion = opcion;
+    }
+
+    public int getIdMatricula() {
+        return IdMatricula;
+    }
+
+    public void setIdMatricula(int IdMatricula) {
+        this.IdMatricula = IdMatricula;
+    }
     
     
-    public Matricula(){}
+    
+    public MatriculaProd(){}
 
     public String getGradoName() {
         return gradoName;

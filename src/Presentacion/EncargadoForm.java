@@ -30,6 +30,8 @@ public class EncargadoForm extends javax.swing.JFrame {
     ArrayList<Encargado> lEncargado;
      EncargadoJpaController CEncargado = new EncargadoJpaController();
      Encargado EncargadoEdit;
+     Encargado EncargadoDele;
+     
     boolean updateUser  = false;
     
     
@@ -259,9 +261,9 @@ public class EncargadoForm extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(117, 117, 117)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 147, Short.MAX_VALUE))
         );
@@ -303,6 +305,14 @@ public class EncargadoForm extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(tableEncargado);
+        if (tableEncargado.getColumnModel().getColumnCount() > 0) {
+            tableEncargado.getColumnModel().getColumn(0).setMinWidth(0);
+            tableEncargado.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tableEncargado.getColumnModel().getColumn(0).setMaxWidth(0);
+            tableEncargado.getColumnModel().getColumn(7).setMinWidth(0);
+            tableEncargado.getColumnModel().getColumn(7).setPreferredWidth(0);
+            tableEncargado.getColumnModel().getColumn(7).setMaxWidth(0);
+        }
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel8.setText("Lista de encargados");
@@ -352,26 +362,45 @@ public class EncargadoForm extends javax.swing.JFrame {
        
            try {
                
-            Encargado encarNew;    
+               
+               if (txtNombre.getText().length() > 0) {
+                   if (txtApellido.getText().length() > 0) {
+                       if (txtDireccion.getText().length() > 0) {
+                           if (!txtDui.getText().equals("        - ")) {
+                               Encargado encarNew;
 
-             if(!this.txtTelefono.getText().trim().equals("-"))
-            {
-                encarNew=new Encargado();
-                TelefonoEncargado Telefonousuario = new TelefonoEncargado();               
-                Telefonousuario.setIdEncargado(encarNew);
-                Telefonousuario.setTelefono(txtTelefono.getText());
-                CTelUsuarios.create(Telefonousuario);
-            }
-             else
-             {
-                 encarNew = llenarEntidadUsuario();
-                 CEncargado.create(encarNew);
-             }
-            
-            CargarUsuario();
-            LimpearCampos();
+                               if (!this.txtTelefono.getText().trim().equals("-")) {
+                                   // encarNew=new Encargado();
+                                   encarNew = llenarEntidadUsuario();
+                                   CEncargado.create(encarNew);
+                                   TelefonoEncargado Telefonousuario = new TelefonoEncargado();
+                                   Telefonousuario.setIdEncargado(encarNew);
+                                   Telefonousuario.setTelefono(txtTelefono.getText());
+                                   CTelUsuarios.create(Telefonousuario);
+                               } else {
+                                   encarNew = llenarEntidadUsuario();
+                                   CEncargado.create(encarNew);
+                               }
+
+                               CargarUsuario();
+                               LimpearCampos();
+                           } else {
+                               JOptionPane.showMessageDialog(null, "Debe de ingresar el numero de Dui");
+                           }
+                       } else {
+                           JOptionPane.showMessageDialog(null, "Debe de ingresar la direccion");
+                       }
+
+                   } else {
+                       JOptionPane.showMessageDialog(null, "Debe de ingresar el apellido");
+                   }
+               } else {
+                   JOptionPane.showMessageDialog(null, "Debe de ingresar el nombre");
+               }
+        
 
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
         }
         
     }//GEN-LAST:event_btnAgregarActionPerformed
@@ -453,38 +482,57 @@ public class EncargadoForm extends javax.swing.JFrame {
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         try {
             // TODO add your handling code here:4
+               if (txtNombre.getText().length() > 0) {
+                   if (txtApellido.getText().length() > 0) {
+                       if (txtDireccion.getText().length() > 0) {
+                           if (!txtDui.getText().equals("        - ")) {
+                               EncargadoEdit.setNombre(txtNombre.getText());
+                               EncargadoEdit.setApellido(txtApellido.getText());
+                               EncargadoEdit.setDireccion(txtDireccion.getText());
+                               EncargadoEdit.setDui(txtDui.getText());
+
+                               CEncargado.edit(EncargadoEdit);
+
+                               if (TelefonoUsu) {
+                                   telUsuEdit.setIdEncargado(EncargadoEdit);
+                                   telUsuEdit.setTelefono(txtTelefono.getText());
+                                   CTelUsuarios.edit(telUsuEdit);
+                                   TelefonoUsu = false;
+                               } else if (!this.txtTelefono.getText().trim().equals("-")) {
+                                   TelefonoUsu = true;
+                                   TelefonoEncargado Telefonousuario = new TelefonoEncargado();
+                                   Telefonousuario.setIdEncargado(EncargadoEdit);
+                                   Telefonousuario.setTelefono(txtTelefono.getText());
+                                   CTelUsuarios.create(Telefonousuario);
+                               }
+
+                               LimpearCampos();
+                               CargarUsuario();
+                           } else {
+                               JOptionPane.showMessageDialog(null, "Debe de ingresar el numero de Dui");
+                           }
+                       } else {
+                           JOptionPane.showMessageDialog(null, "Debe de ingresar la direccion");
+                       }
+
+                   } else {
+                       JOptionPane.showMessageDialog(null, "Debe de ingresar el apellido");
+                   }
+               } else {
+                   JOptionPane.showMessageDialog(null, "Debe de ingresar el nombre");
+               }
             
-            EncargadoEdit.setNombre(txtNombre.getText());
-            EncargadoEdit.setApellido(txtApellido.getText());
-            EncargadoEdit.setDireccion(txtDireccion.getText());
-            EncargadoEdit.setDui(txtDui.getText());
-            
-            CEncargado.edit(EncargadoEdit);
-            
-            if(TelefonoUsu)
-            {
-                telUsuEdit.setIdEncargado(EncargadoEdit);
-                telUsuEdit.setTelefono(txtTelefono.getText());
-                CTelUsuarios.edit(telUsuEdit);
-                TelefonoUsu=false;
-            }
-            else if(!this.txtTelefono.getText().trim().equals("-"))
-            {
-                TelefonoUsu=true;
-                TelefonoEncargado Telefonousuario = new TelefonoEncargado();               
-                Telefonousuario.setIdEncargado(EncargadoEdit);
-                Telefonousuario.setTelefono(txtTelefono.getText());
-                CTelUsuarios.create(Telefonousuario);          
-            }
             
             
-            LimpearCampos();
+            
+            /////
+ 
         } catch (NonexistentEntityException ex) {
             Logger.getLogger(EncargadoForm.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(EncargadoForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-            CargarUsuario();
+            
    
 
     }//GEN-LAST:event_btnActualizarActionPerformed
@@ -510,6 +558,7 @@ public class EncargadoForm extends javax.swing.JFrame {
 
             return encargado;
         } catch (Exception e) {
+            
         }
         return null;
     }

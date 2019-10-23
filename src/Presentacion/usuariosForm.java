@@ -38,7 +38,7 @@ public class usuariosForm extends javax.swing.JFrame {
     UsuarioJpaController CUsuarios = new UsuarioJpaController();
     TelefonoUsuarioJpaController CTelUsuarios = new TelefonoUsuarioJpaController();
     TipoUsuarioJpaController CTipoU = new TipoUsuarioJpaController();
-    Usuario usuario;
+   
     BigDecimal idUsua;
     TelefonoUsuario Telefonousuario ;
 
@@ -478,13 +478,50 @@ public class usuariosForm extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         try {
+            
+            if (txtNombre.getText().length() > 0) {
+                if (txtApellido.getText().length() > 0) {
+                    if (txtUserName.getText().length() > 0) {
+                        if (txtFechaNac.getText().length() > 0) {
+                            if (!txtDui.getText().equals("        - ")) {
+                                if (txtPassword.getText().length() > 0) {
+                                    if (txtPassword.getText().length() > 4) {
+                                        Usuario nuevoU = llenarEntidadUsuario();
 
-            CUsuarios.create(llenarEntidadUsuario());
-            if(!this.txtTelefono.getText().trim().equals("-"))
-            {
-                CTelUsuarios.create(llenarEntidadTelUsuario());
+                                        CUsuarios.create(nuevoU);
+                                        if (!this.txtTelefono.getText().trim().equals("-")) {
+                                            TelefonoUsuario telneU = llenarEntidadTelUsuario();
+
+                                            telneU.setIdUsuario(nuevoU);
+
+                                            CTelUsuarios.create(telneU);
+                                        }
+                                        LimpearCampos();
+                                        CargarUsuario();
+
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "La contrase debe de tener 5 o mas caracateres");
+                                    }
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Falta ingresar la contraseña");
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Falta ingresar el dui.");
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Falta ingresar la fecha.");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Falta ingresar el nombre de usuario");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Falta ingresar el apellido.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Falta ingresar el nombre.");
             }
-            CargarUsuario();
+
+ 
 
         } catch (Exception e) {
              JOptionPane.showMessageDialog(null, e);
@@ -497,7 +534,7 @@ public class usuariosForm extends javax.swing.JFrame {
             int idTipoU;
             
             TipoUsuario tipoUEntidad = new TipoUsuario();
-            usuario= new Usuario();
+           Usuario usuario= new Usuario();
             usuario.setNombre(txtNombre.getText());
             usuario.setApellido(txtApellido.getText());
             usuario.setFechaNac(formatter.parse(txtFechaNac.getText()));
@@ -528,7 +565,7 @@ public class usuariosForm extends javax.swing.JFrame {
                 usuariotel.setIdUsuario(idUsua);
                 TelefonoUsu=false;
             }
-            Telefonousuario.setIdUsuario(usuario);
+            
             Telefonousuario.setTelefono(this.txtTelefono.getText()); 
             return Telefonousuario;
         } catch (Exception e) {
@@ -643,45 +680,72 @@ public class usuariosForm extends javax.swing.JFrame {
                 int opcion = JOptionPane.showConfirmDialog(null, "Está seguro que desea actul al usuario", "Actualizar Usuario", JOptionPane.YES_NO_OPTION);
                 if (opcion == 0) {
 
-             int idTipoU;
-    
-            TipoUsuario tipoUEntidad = new TipoUsuario();
+                    if (txtNombre.getText().length() > 0) {
+                        if (txtApellido.getText().length() > 0) {
+                            if (txtUserName.getText().length() > 0) {
+                                if (txtFechaNac.getText().length() > 0) {
+                                    if (!txtDui.getText().equals("        - ")) {
+                                        if (txtPassword.getText().length() > 0) {
+                                            if (txtPassword.getText().length() > 4) {
+                                                int idTipoU;
+
+                                                TipoUsuario tipoUEntidad = new TipoUsuario();
+
+                                                usuarioEdit.setNombre(txtNombre.getText());
+                                                usuarioEdit.setApellido(txtApellido.getText());
+                                                usuarioEdit.setFechaNac(formatter.parse(txtFechaNac.getText()));
+                                                usuarioEdit.setDui(txtDui.getText());
+                                                idTipoU = tipoUEntidad.extraerIDTipoU(cbxUserType.getSelectedItem().toString());
+
+                                                tipoUEntidad.setIdTipo(BigDecimal.valueOf(idTipoU));
+                                                usuarioEdit.setIdTipo(tipoUEntidad);
+
+                                                usuarioEdit.setUsername(txtUserName.getText());
+                                                usuarioEdit.setPass(txtPassword.getText());
+                                                CUsuarios.edit(usuarioEdit);
+                                                if (TelefonoUsu) {
+                                                    Usuario usuariotel = new Usuario();
+                                                    usuariotel.setIdUsuario(idUsua);
+                                                    telUsuEdit.setTelefono(txtTelefono.getText());
+                                                    telUsuEdit.setIdUsuario(usuariotel);
+                                                    CTelUsuarios.edit(telUsuEdit);
+                                                    TelefonoUsu = false;
+                                                } else if (!this.txtTelefono.getText().trim().equals("-")) {
+                                                    //TelefonoUsu=true;
+                                                    //CTelUsuarios.create(llenarEntidadTelUsuario());
+
+                                                    TelefonoUsu = true;
+                                                    TelefonoUsuario Telefonousuario = new TelefonoUsuario();
+                                                    Telefonousuario.setIdUsuario(usuarioEdit);
+                                                    Telefonousuario.setTelefono(txtTelefono.getText());
+                                                    CTelUsuarios.create(Telefonousuario);
+                                                }
+
+                                                CargarUsuario();
+                                                LimpearCampos();
+                                            } else {
+                                                JOptionPane.showMessageDialog(null, "La contrase debe de tener 5 o mas caracateres");
+                                            }
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, "Falta ingresar la contraseña");
+                                        }
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "Falta ingresar el dui.");
+                                    }
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Falta ingresar la fecha.");
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Falta ingresar el nombre de usuario");
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Falta ingresar el apellido.");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Falta ingresar el nombre.");
+                    }
 
 
-            usuarioEdit.setNombre(txtNombre.getText());
-            usuarioEdit.setApellido(txtApellido.getText());
-            usuarioEdit.setFechaNac(formatter.parse(txtFechaNac.getText()));
-            usuarioEdit.setDui(txtDui.getText());            
-            idTipoU = tipoUEntidad.extraerIDTipoU(cbxUserType.getSelectedItem().toString());
-
-            tipoUEntidad.setIdTipo(BigDecimal.valueOf(idTipoU));
-            usuarioEdit.setIdTipo(tipoUEntidad);
-
-            usuarioEdit.setUsername(txtUserName.getText());
-            usuarioEdit.setPass(txtPassword.getText());           
-            CUsuarios.edit(usuarioEdit);
-            if(TelefonoUsu)
-            {
-                Usuario usuariotel = new Usuario();
-                usuariotel.setIdUsuario(idUsua);
-                telUsuEdit.setTelefono(txtTelefono.getText());
-                telUsuEdit.setIdUsuario(usuariotel);
-                CTelUsuarios.edit(telUsuEdit);
-                TelefonoUsu=false;
-            }
-            else if(!this.txtTelefono.getText().trim().equals("-"))
-            {
-                //TelefonoUsu=true;
-                //CTelUsuarios.create(llenarEntidadTelUsuario());
-                
-                TelefonoUsu=true;
-                TelefonoUsuario Telefonousuario = new TelefonoUsuario();               
-                Telefonousuario.setIdUsuario(usuarioEdit);
-                Telefonousuario.setTelefono(txtTelefono.getText());
-                CTelUsuarios.create(Telefonousuario);    
-            }
-            
-            CargarUsuario();
                 }
             } catch (Exception e) {
 

@@ -17,8 +17,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import modeloClases.InsertarMatricula;
-import modeloClases.Matricula;
+import Datos.ManejadorMatricula;
+import Logica_Negocio.MatriculaProd;
 
 /**
  *
@@ -31,6 +31,8 @@ public class matriculaForm extends javax.swing.JFrame {
      */
     
     DefaultTableModel modeloTable;
+    
+     DefaultTableModel modeloTableMatriculas;
     Grado grado = new Grado();
     Turno turno = new Turno();
     
@@ -40,14 +42,38 @@ public class matriculaForm extends javax.swing.JFrame {
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
     
      Alumno AlumnoEdit;
+     
+     ManejadorMatricula manMatricula = new ManejadorMatricula();
+     
+    MatriculaProd matEdit;
     
     public matriculaForm() {
         initComponents();
         
         grado.ComboGrado(comboGrado);
         turno.ComboTurno(comboTurno);
-         modeloTable = (DefaultTableModel) this.tableAlumno.getModel();
+        modeloTable = (DefaultTableModel) this.tableAlumno.getModel();
+        modeloTableMatriculas = (DefaultTableModel) this.tablaMatriculas.getModel();
+
+          
+         
         CargarAlumno();
+        manMatricula.extraerDatos(tablaMatriculas);
+       
+        btnActualizar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+       btnMatricular.setEnabled(false);
+    }
+    
+    public void Limpear() {
+        
+        lblNameA.setText("-----");
+        this.comboGrado.setSelectedIndex(0);
+        this.comboTurno.setSelectedIndex(0);
+        btnActualizar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        btnMatricular.setEnabled(false);
+        
     }
     
     
@@ -93,8 +119,15 @@ public class matriculaForm extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         comboGrado = new javax.swing.JComboBox<>();
         comboTurno = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        btnMatricular = new javax.swing.JButton();
+        btnActualizar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        btnLimpear = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablaMatriculas = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -133,10 +166,31 @@ public class matriculaForm extends javax.swing.JFrame {
 
         jLabel5.setText("Seleccionar Turno:");
 
-        jButton1.setText("Matricular");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnMatricular.setText("Matricular");
+        btnMatricular.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnMatricularActionPerformed(evt);
+            }
+        });
+
+        btnActualizar.setText("Actualizar");
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarActionPerformed(evt);
+            }
+        });
+
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+
+        btnLimpear.setText("Limpear");
+        btnLimpear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpearActionPerformed(evt);
             }
         });
 
@@ -171,8 +225,14 @@ public class matriculaForm extends javax.swing.JFrame {
                 .addContainerGap(32, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(349, 349, 349))
+                .addComponent(btnMatricular, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
+                .addComponent(btnActualizar)
+                .addGap(26, 26, 26)
+                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
+                .addComponent(btnLimpear, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(182, 182, 182))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -193,26 +253,83 @@ public class matriculaForm extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(comboTurno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnMatricular)
+                    .addComponent(btnActualizar)
+                    .addComponent(btnEliminar)
+                    .addComponent(btnLimpear))
+                .addContainerGap())
         );
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Matricula");
+
+        jPanel2.setBackground(new java.awt.Color(204, 204, 204));
+
+        jLabel6.setText("Lista de matriculas:");
+
+        tablaMatriculas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID Matricula", "Alumno", "Grado", "Turno", "Fecha de Matricula"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tablaMatriculas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaMatriculasMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tablaMatriculas);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jLabel6)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(331, 331, 331)
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -222,7 +339,9 @@ public class matriculaForm extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(61, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -236,7 +355,9 @@ public class matriculaForm extends javax.swing.JFrame {
 
                 if (indice > -1) 
                 {
-
+                    Limpear();
+                    btnMatricular.setEnabled(true);
+                    
                        lblNameA.setText(modeloTable.getValueAt(indice, 2).toString());
                        
                        AlumnoEdit = (Alumno) tableAlumno.getValueAt(tableAlumno.getSelectedRow(), 0);
@@ -249,10 +370,10 @@ public class matriculaForm extends javax.swing.JFrame {
             }
     }//GEN-LAST:event_tableAlumnoMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnMatricularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMatricularActionPerformed
         // TODO add your handling code here:
         
-        Matricula matriAdd = new Matricula();
+        MatriculaProd matriAdd = new MatriculaProd();
         
         matriAdd.setIDAlumno(Integer.parseInt(AlumnoEdit.getIdAlumno().toString()));
         
@@ -265,15 +386,106 @@ public class matriculaForm extends javax.swing.JFrame {
         //JOptionPane.showMessageDialog(null, matriAdd.getIDAlumno());
         
         
-        InsertarMatricula newInsert = new InsertarMatricula();
+        ManejadorMatricula newInsert = new ManejadorMatricula();
         
         try {
             newInsert.agregarMatricula(matriAdd);
+            manMatricula.extraerDatos(tablaMatriculas);
+            Limpear();
+            btnMatricular.setEnabled(false);
         } catch (SQLException ex) {
             Logger.getLogger(matriculaForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnMatricularActionPerformed
 
+    private void tablaMatriculasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaMatriculasMouseClicked
+        // TODO add your handling code here:
+        
+          int indice = tablaMatriculas.getSelectedRow();
+          
+          if (indice > -1 ) {
+
+              btnMatricular.setEnabled(false);
+              btnActualizar.setEnabled(true);
+              btnEliminar.setEnabled(true);
+              
+              
+              lblNameA.setText(tablaMatriculas.getValueAt(indice, 1).toString());
+              matEdit = new MatriculaProd();
+
+              matEdit.setIdMatricula(Integer.parseInt(tablaMatriculas.getValueAt(indice, 0).toString()));
+              matEdit.setGradoName(tablaMatriculas.getValueAt(indice, 2).toString());
+              matEdit.setTurnoName(tablaMatriculas.getValueAt(indice, 3).toString());
+              
+              
+              
+              
+              
+              for (int i = 0; i < this.comboGrado.getItemCount(); i++) {
+                  if (this.comboGrado.getItemAt(i).toString().equals(tablaMatriculas.getValueAt(indice, 2).toString())) {
+                      this.comboGrado.setSelectedIndex(i);
+                      break;
+                  }
+              }
+              
+              for (int i = 0; i < this.comboTurno.getItemCount(); i++) {
+                  if (this.comboTurno.getItemAt(i).toString().equals(tablaMatriculas.getValueAt(indice, 3).toString())) {
+                      this.comboTurno.setSelectedIndex(i);
+                      break;
+                  }
+              }
+            
+        }
+        
+    }//GEN-LAST:event_tablaMatriculasMouseClicked
+
+    private void btnLimpearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpearActionPerformed
+        // TODO add your handling code here:
+        
+        
+        
+         
+        Limpear();
+    }//GEN-LAST:event_btnLimpearActionPerformed
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        // TODO add your handling code here:
+        
+         ManejadorMatricula newEdit = new ManejadorMatricula();
+        llenarMatriculaEdit();
+        matEdit.setOpcion(1);
+        try {
+            newEdit.editarMatricula(matEdit);
+            Limpear();
+            manMatricula.extraerDatos(tablaMatriculas);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(matriculaForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // TODO add your handling code here:
+
+        ManejadorMatricula newEdit = new ManejadorMatricula();
+        llenarMatriculaEdit();
+        matEdit.setOpcion(2);
+        try {
+            newEdit.editarMatricula(matEdit);
+            Limpear();
+            manMatricula.extraerDatos(tablaMatriculas);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(matriculaForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    public void llenarMatriculaEdit(){
+    
+        matEdit.setGradoName(comboGrado.getSelectedItem().toString());
+        matEdit.setTurnoName(comboTurno.getSelectedItem().toString());
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -310,17 +522,24 @@ public class matriculaForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnActualizar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnLimpear;
+    private javax.swing.JButton btnMatricular;
     private javax.swing.JComboBox<Grado> comboGrado;
     private javax.swing.JComboBox<Logica_Negocio.Turno> comboTurno;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblNameA;
+    private javax.swing.JTable tablaMatriculas;
     private javax.swing.JTable tableAlumno;
     // End of variables declaration//GEN-END:variables
 }
