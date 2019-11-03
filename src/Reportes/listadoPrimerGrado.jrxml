@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="850" pageHeight="842" columnWidth="810" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="id_grado" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\ronal\\Documents\\Ciclo-II-2019\\Tecnica de producion de sistemas\\TSP\\tpsFuncional\\src\\Reportes\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="id_turno" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select a.apellido as Apellido, a.nombre as Nombre, Concat(e.nombre, Concat(' ', e.apellido)) as Encargado, te.telefono as "Telefono Encargado", g.grado, t.turno, Concat(u.nombre, Concat(' ', u.apellido)) as Docente, m.FECHA_MATRICULA as "Fecha de matricula" from matricula m
+inner join alumno a on a.id_alumno = m.id_alumno
+inner join encargado e on e.id_encargado = a.id_encargado
+inner join telefono_encargado te on te.id_encargado = e.id_encargado
+inner join grado g on g.id_grado = m.id_grado
+inner join turno t on t.id_turno = m.id_turno
+inner join usuario_grado ug on ug.id_grado = m.id_grado
+inner join usuario u on u.id_usuario = ug.id_usuario
+where m.id_grado = $P{id_grado} and m.id_turno = $P{id_turno} and m.estado = 1 and (EXTRACT(year from m.FECHA_MATRICULA)) = (EXTRACT(year from sysdate))
+order by a.apellido]]>
+	</queryString>
+	<field name="APELLIDO" class="java.lang.String"/>
+	<field name="NOMBRE" class="java.lang.String"/>
+	<field name="ENCARGADO" class="java.lang.String"/>
+	<field name="Telefono Encargado" class="java.lang.String"/>
+	<field name="GRADO" class="java.lang.String"/>
+	<field name="TURNO" class="java.lang.String"/>
+	<field name="DOCENTE" class="java.lang.String"/>
+	<field name="Fecha de matricula" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="710" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="37" width="253" height="31"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Listado de alumnos de ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="253" y="37" width="145" height="31"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{GRADO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="103" splitType="Stretch">
+			<staticText>
+				<reportElement x="37" y="50" width="48" height="28"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Turno:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="50" width="100" height="18"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TURNO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="10" width="77" height="21"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Docente:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="11" width="100" height="20"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DOCENTE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="100" height="20"/>
+				<textElement textAlignment="Justified">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[APELLIDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="2" width="100" height="20"/>
+				<textElement textAlignment="Justified">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="455" y="2" width="100" height="20"/>
+				<textElement textAlignment="Justified">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ENCARGADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="607" y="0" width="203" height="20"/>
+				<textElement textAlignment="Justified">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TELEFONO DE ENCARGADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="253" y="2" width="166" height="20"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA DE MATRICULA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="45" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="13" width="100" height="20"/>
+				<textElement textAlignment="Justified">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{APELLIDO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="13" width="100" height="20"/>
+				<textElement textAlignment="Justified">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMBRE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="13" width="128" height="20"/>
+				<textElement textAlignment="Justified">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ENCARGADO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="651" y="13" width="100" height="20"/>
+				<textElement textAlignment="Justified">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Telefono Encargado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="253" y="13" width="166" height="20"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{Fecha de matricula}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
