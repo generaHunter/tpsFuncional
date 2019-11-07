@@ -17,20 +17,39 @@ public class Nota {
      private BigDecimal idPeriodo;
      private BigDecimal idCalificacion;
      private BigDecimal idAlumno;
+     private double nota1;
+     private double nota2;
+     private double nota3;
     
-    public Nota(BigDecimal idNota,BigDecimal idMatusu,BigDecimal idPeriodo,BigDecimal idCalificacion,BigDecimal idAlumno) {
+    public Nota(BigDecimal idNota,BigDecimal idMatusu,BigDecimal idPeriodo,BigDecimal idCalificacion,BigDecimal idAlumno,double nota1,double nota2,double nota3) {
     this.idNota = idNota;
     this.idMatusu=idMatusu;
     this.idPeriodo=idPeriodo;
     this.idCalificacion=idCalificacion;
     this.idAlumno=idAlumno;
+    this.nota1=nota1;
+    this.nota2=nota2;
+    this.nota3=nota3;
+    }
+    
+//    public void Nota(BigDecimal idNota,double nota1,double nota2,double nota3)
+//    {
+//        this.idNota = idNota;
+//        this.nota1=nota1;
+//        this.nota2=nota2;
+//        this.nota3=nota3;
+//    }
+    
+    public Nota()
+    {
+        
     }
     
     public BigDecimal getIdNota() {
         return idNota;
     }
 
-    public void setIdNota(BigDecimal idGrado) {
+    public void setIdNota(BigDecimal idNota) {
         this.idNota = idNota;
     }
     
@@ -66,5 +85,34 @@ public class Nota {
         this.idAlumno = idAlumno;
     }
  
+    public double getNota1()
+    {
+        return nota1;
+    }
+    
+    public void setNota1(double nota1)
+    {
+        this.nota1=nota1;
+    }
+    
+        public double getNota2()
+    {
+        return nota2;
+    }
+    
+    public void setNota2(double nota2)
+    {
+        this.nota2=nota2;
+    }
+    
+        public double getNota3()
+    {
+        return nota3;
+    }
+    
+    public void setNota3(double nota3)
+    {
+        this.nota3=nota3;
+    }
 
 }
