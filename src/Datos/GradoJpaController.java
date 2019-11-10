@@ -5,19 +5,23 @@
  */
 package Datos;
 
+import Datos.exceptions.IllegalOrphanException;
 import Datos.exceptions.NonexistentEntityException;
-import Datos.exceptions.PreexistingEntityException;
 import Logica_Negocio.Grado;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import Logica_Negocio.UsuarioGrado;
+import java.util.ArrayList;
+import java.util.List;
+import Logica_Negocio.Matricula;
+import Logica_Negocio.MateriaUsuario;
+import java.math.BigDecimal;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -26,8 +30,7 @@ import javax.persistence.criteria.Root;
 public class GradoJpaController implements Serializable {
 
     public GradoJpaController() {
-        
-        this.emf = Persistence.createEntityManagerFactory("esucelaProyectoPU");
+         this.emf = Persistence.createEntityManagerFactory("esucelaProyectoPU");
     }
     private EntityManagerFactory emf = null;
 
@@ -35,18 +38,67 @@ public class GradoJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Grado grado) throws PreexistingEntityException, Exception {
+    public void create(Grado grado) {
+        if (grado.getUsuarioGradoList() == null) {
+            grado.setUsuarioGradoList(new ArrayList<UsuarioGrado>());
+        }
+        if (grado.getMatriculaList() == null) {
+            grado.setMatriculaList(new ArrayList<Matricula>());
+        }
+        if (grado.getMateriaUsuario1List() == null) {
+            grado.setMateriaUsuario1List(new ArrayList<MateriaUsuario>());
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(grado);
-            em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findGrado(grado.getIdGrado()) != null) {
-                throw new PreexistingEntityException("Grado " + grado + " already exists.", ex);
+            List<UsuarioGrado> attachedUsuarioGradoList = new ArrayList<UsuarioGrado>();
+            for (UsuarioGrado usuarioGradoListUsuarioGradoToAttach : grado.getUsuarioGradoList()) {
+                usuarioGradoListUsuarioGradoToAttach = em.getReference(usuarioGradoListUsuarioGradoToAttach.getClass(), usuarioGradoListUsuarioGradoToAttach.getIdUsuarioGrado());
+                attachedUsuarioGradoList.add(usuarioGradoListUsuarioGradoToAttach);
             }
-            throw ex;
+            grado.setUsuarioGradoList(attachedUsuarioGradoList);
+            List<Matricula> attachedMatriculaList = new ArrayList<Matricula>();
+            for (Matricula matriculaListMatriculaToAttach : grado.getMatriculaList()) {
+                matriculaListMatriculaToAttach = em.getReference(matriculaListMatriculaToAttach.getClass(), matriculaListMatriculaToAttach.getIdMatricula());
+                attachedMatriculaList.add(matriculaListMatriculaToAttach);
+            }
+            grado.setMatriculaList(attachedMatriculaList);
+            List<MateriaUsuario> attachedMateriaUsuario1List = new ArrayList<MateriaUsuario>();
+            for (MateriaUsuario materiaUsuario1ListMateriaUsuario1ToAttach : grado.getMateriaUsuario1List()) {
+                materiaUsuario1ListMateriaUsuario1ToAttach = em.getReference(materiaUsuario1ListMateriaUsuario1ToAttach.getClass(), materiaUsuario1ListMateriaUsuario1ToAttach.getIdMatusu());
+                attachedMateriaUsuario1List.add(materiaUsuario1ListMateriaUsuario1ToAttach);
+            }
+            grado.setMateriaUsuario1List(attachedMateriaUsuario1List);
+            em.persist(grado);
+            for (UsuarioGrado usuarioGradoListUsuarioGrado : grado.getUsuarioGradoList()) {
+                Grado oldIdGradoOfUsuarioGradoListUsuarioGrado = usuarioGradoListUsuarioGrado.getIdGrado();
+                usuarioGradoListUsuarioGrado.setIdGrado(grado);
+                usuarioGradoListUsuarioGrado = em.merge(usuarioGradoListUsuarioGrado);
+                if (oldIdGradoOfUsuarioGradoListUsuarioGrado != null) {
+                    oldIdGradoOfUsuarioGradoListUsuarioGrado.getUsuarioGradoList().remove(usuarioGradoListUsuarioGrado);
+                    oldIdGradoOfUsuarioGradoListUsuarioGrado = em.merge(oldIdGradoOfUsuarioGradoListUsuarioGrado);
+                }
+            }
+            for (Matricula matriculaListMatricula : grado.getMatriculaList()) {
+                Grado oldIdGradoOfMatriculaListMatricula = matriculaListMatricula.getIdGrado();
+                matriculaListMatricula.setIdGrado(grado);
+                matriculaListMatricula = em.merge(matriculaListMatricula);
+                if (oldIdGradoOfMatriculaListMatricula != null) {
+                    oldIdGradoOfMatriculaListMatricula.getMatriculaList().remove(matriculaListMatricula);
+                    oldIdGradoOfMatriculaListMatricula = em.merge(oldIdGradoOfMatriculaListMatricula);
+                }
+            }
+            for (MateriaUsuario materiaUsuario1ListMateriaUsuario1 : grado.getMateriaUsuario1List()) {
+                Grado oldIdGradoOfMateriaUsuario1ListMateriaUsuario1 = materiaUsuario1ListMateriaUsuario1.getIdGrado();
+                materiaUsuario1ListMateriaUsuario1.setIdGrado(grado);
+                materiaUsuario1ListMateriaUsuario1 = em.merge(materiaUsuario1ListMateriaUsuario1);
+                if (oldIdGradoOfMateriaUsuario1ListMateriaUsuario1 != null) {
+                    oldIdGradoOfMateriaUsuario1ListMateriaUsuario1.getMateriaUsuario1List().remove(materiaUsuario1ListMateriaUsuario1);
+                    oldIdGradoOfMateriaUsuario1ListMateriaUsuario1 = em.merge(oldIdGradoOfMateriaUsuario1ListMateriaUsuario1);
+                }
+            }
+            em.getTransaction().commit();
         } finally {
             if (em != null) {
                 em.close();
@@ -54,12 +106,99 @@ public class GradoJpaController implements Serializable {
         }
     }
 
-    public void edit(Grado grado) throws NonexistentEntityException, Exception {
+    public void edit(Grado grado) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Grado persistentGrado = em.find(Grado.class, grado.getIdGrado());
+            List<UsuarioGrado> usuarioGradoListOld = persistentGrado.getUsuarioGradoList();
+            List<UsuarioGrado> usuarioGradoListNew = grado.getUsuarioGradoList();
+            List<Matricula> matriculaListOld = persistentGrado.getMatriculaList();
+            List<Matricula> matriculaListNew = grado.getMatriculaList();
+            List<MateriaUsuario> materiaUsuario1ListOld = persistentGrado.getMateriaUsuario1List();
+            List<MateriaUsuario> materiaUsuario1ListNew = grado.getMateriaUsuario1List();
+            List<String> illegalOrphanMessages = null;
+            for (UsuarioGrado usuarioGradoListOldUsuarioGrado : usuarioGradoListOld) {
+                if (!usuarioGradoListNew.contains(usuarioGradoListOldUsuarioGrado)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain UsuarioGrado " + usuarioGradoListOldUsuarioGrado + " since its idGrado field is not nullable.");
+                }
+            }
+            for (Matricula matriculaListOldMatricula : matriculaListOld) {
+                if (!matriculaListNew.contains(matriculaListOldMatricula)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Matricula " + matriculaListOldMatricula + " since its idGrado field is not nullable.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            List<UsuarioGrado> attachedUsuarioGradoListNew = new ArrayList<UsuarioGrado>();
+            for (UsuarioGrado usuarioGradoListNewUsuarioGradoToAttach : usuarioGradoListNew) {
+                usuarioGradoListNewUsuarioGradoToAttach = em.getReference(usuarioGradoListNewUsuarioGradoToAttach.getClass(), usuarioGradoListNewUsuarioGradoToAttach.getIdUsuarioGrado());
+                attachedUsuarioGradoListNew.add(usuarioGradoListNewUsuarioGradoToAttach);
+            }
+            usuarioGradoListNew = attachedUsuarioGradoListNew;
+            grado.setUsuarioGradoList(usuarioGradoListNew);
+            List<Matricula> attachedMatriculaListNew = new ArrayList<Matricula>();
+            for (Matricula matriculaListNewMatriculaToAttach : matriculaListNew) {
+                matriculaListNewMatriculaToAttach = em.getReference(matriculaListNewMatriculaToAttach.getClass(), matriculaListNewMatriculaToAttach.getIdMatricula());
+                attachedMatriculaListNew.add(matriculaListNewMatriculaToAttach);
+            }
+            matriculaListNew = attachedMatriculaListNew;
+            grado.setMatriculaList(matriculaListNew);
+            List<MateriaUsuario> attachedMateriaUsuario1ListNew = new ArrayList<MateriaUsuario>();
+            for (MateriaUsuario materiaUsuario1ListNewMateriaUsuario1ToAttach : materiaUsuario1ListNew) {
+                materiaUsuario1ListNewMateriaUsuario1ToAttach = em.getReference(materiaUsuario1ListNewMateriaUsuario1ToAttach.getClass(), materiaUsuario1ListNewMateriaUsuario1ToAttach.getIdMatusu());
+                attachedMateriaUsuario1ListNew.add(materiaUsuario1ListNewMateriaUsuario1ToAttach);
+            }
+            materiaUsuario1ListNew = attachedMateriaUsuario1ListNew;
+            grado.setMateriaUsuario1List(materiaUsuario1ListNew);
             grado = em.merge(grado);
+            for (UsuarioGrado usuarioGradoListNewUsuarioGrado : usuarioGradoListNew) {
+                if (!usuarioGradoListOld.contains(usuarioGradoListNewUsuarioGrado)) {
+                    Grado oldIdGradoOfUsuarioGradoListNewUsuarioGrado = usuarioGradoListNewUsuarioGrado.getIdGrado();
+                    usuarioGradoListNewUsuarioGrado.setIdGrado(grado);
+                    usuarioGradoListNewUsuarioGrado = em.merge(usuarioGradoListNewUsuarioGrado);
+                    if (oldIdGradoOfUsuarioGradoListNewUsuarioGrado != null && !oldIdGradoOfUsuarioGradoListNewUsuarioGrado.equals(grado)) {
+                        oldIdGradoOfUsuarioGradoListNewUsuarioGrado.getUsuarioGradoList().remove(usuarioGradoListNewUsuarioGrado);
+                        oldIdGradoOfUsuarioGradoListNewUsuarioGrado = em.merge(oldIdGradoOfUsuarioGradoListNewUsuarioGrado);
+                    }
+                }
+            }
+            for (Matricula matriculaListNewMatricula : matriculaListNew) {
+                if (!matriculaListOld.contains(matriculaListNewMatricula)) {
+                    Grado oldIdGradoOfMatriculaListNewMatricula = matriculaListNewMatricula.getIdGrado();
+                    matriculaListNewMatricula.setIdGrado(grado);
+                    matriculaListNewMatricula = em.merge(matriculaListNewMatricula);
+                    if (oldIdGradoOfMatriculaListNewMatricula != null && !oldIdGradoOfMatriculaListNewMatricula.equals(grado)) {
+                        oldIdGradoOfMatriculaListNewMatricula.getMatriculaList().remove(matriculaListNewMatricula);
+                        oldIdGradoOfMatriculaListNewMatricula = em.merge(oldIdGradoOfMatriculaListNewMatricula);
+                    }
+                }
+            }
+            for (MateriaUsuario materiaUsuario1ListOldMateriaUsuario1 : materiaUsuario1ListOld) {
+                if (!materiaUsuario1ListNew.contains(materiaUsuario1ListOldMateriaUsuario1)) {
+                    materiaUsuario1ListOldMateriaUsuario1.setIdGrado(null);
+                    materiaUsuario1ListOldMateriaUsuario1 = em.merge(materiaUsuario1ListOldMateriaUsuario1);
+                }
+            }
+            for (MateriaUsuario materiaUsuario1ListNewMateriaUsuario1 : materiaUsuario1ListNew) {
+                if (!materiaUsuario1ListOld.contains(materiaUsuario1ListNewMateriaUsuario1)) {
+                    Grado oldIdGradoOfMateriaUsuario1ListNewMateriaUsuario1 = materiaUsuario1ListNewMateriaUsuario1.getIdGrado();
+                    materiaUsuario1ListNewMateriaUsuario1.setIdGrado(grado);
+                    materiaUsuario1ListNewMateriaUsuario1 = em.merge(materiaUsuario1ListNewMateriaUsuario1);
+                    if (oldIdGradoOfMateriaUsuario1ListNewMateriaUsuario1 != null && !oldIdGradoOfMateriaUsuario1ListNewMateriaUsuario1.equals(grado)) {
+                        oldIdGradoOfMateriaUsuario1ListNewMateriaUsuario1.getMateriaUsuario1List().remove(materiaUsuario1ListNewMateriaUsuario1);
+                        oldIdGradoOfMateriaUsuario1ListNewMateriaUsuario1 = em.merge(oldIdGradoOfMateriaUsuario1ListNewMateriaUsuario1);
+                    }
+                }
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -77,7 +216,7 @@ public class GradoJpaController implements Serializable {
         }
     }
 
-    public void destroy(BigDecimal id) throws NonexistentEntityException {
+    public void destroy(BigDecimal id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -88,6 +227,29 @@ public class GradoJpaController implements Serializable {
                 grado.getIdGrado();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The grado with id " + id + " no longer exists.", enfe);
+            }
+            List<String> illegalOrphanMessages = null;
+            List<UsuarioGrado> usuarioGradoListOrphanCheck = grado.getUsuarioGradoList();
+            for (UsuarioGrado usuarioGradoListOrphanCheckUsuarioGrado : usuarioGradoListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Grado (" + grado + ") cannot be destroyed since the UsuarioGrado " + usuarioGradoListOrphanCheckUsuarioGrado + " in its usuarioGradoList field has a non-nullable idGrado field.");
+            }
+            List<Matricula> matriculaListOrphanCheck = grado.getMatriculaList();
+            for (Matricula matriculaListOrphanCheckMatricula : matriculaListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Grado (" + grado + ") cannot be destroyed since the Matricula " + matriculaListOrphanCheckMatricula + " in its matriculaList field has a non-nullable idGrado field.");
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            List<MateriaUsuario> materiaUsuario1List = grado.getMateriaUsuario1List();
+            for (MateriaUsuario materiaUsuario1ListMateriaUsuario1 : materiaUsuario1List) {
+                materiaUsuario1ListMateriaUsuario1.setIdGrado(null);
+                materiaUsuario1ListMateriaUsuario1 = em.merge(materiaUsuario1ListMateriaUsuario1);
             }
             em.remove(grado);
             em.getTransaction().commit();

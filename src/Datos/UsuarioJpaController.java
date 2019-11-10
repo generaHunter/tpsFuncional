@@ -7,7 +7,6 @@ package Datos;
 
 import Datos.exceptions.IllegalOrphanException;
 import Datos.exceptions.NonexistentEntityException;
-import Datos.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -15,10 +14,12 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import Logica_Negocio.TipoUsuario;
 import Logica_Negocio.TelefonoUsuario;
-import Logica_Negocio.Usuario;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import Logica_Negocio.UsuarioGrado;
+import Logica_Negocio.MateriaUsuario;
+import Logica_Negocio.Usuario;
+import java.math.BigDecimal;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -29,8 +30,8 @@ import javax.persistence.Persistence;
  */
 public class UsuarioJpaController implements Serializable {
 
-    public UsuarioJpaController() {
-        this.emf = Persistence.createEntityManagerFactory("esucelaProyectoPU");
+    public UsuarioJpaController( ) {
+         this.emf = Persistence.createEntityManagerFactory("esucelaProyectoPU");
     }
     private EntityManagerFactory emf = null;
 
@@ -38,9 +39,15 @@ public class UsuarioJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Usuario usuario) throws PreexistingEntityException, Exception {
+    public void create(Usuario usuario) {
         if (usuario.getTelefonoUsuarioList() == null) {
             usuario.setTelefonoUsuarioList(new ArrayList<TelefonoUsuario>());
+        }
+        if (usuario.getUsuarioGradoList() == null) {
+            usuario.setUsuarioGradoList(new ArrayList<UsuarioGrado>());
+        }
+        if (usuario.getMateriaUsuarioList() == null) {
+            usuario.setMateriaUsuarioList(new ArrayList<MateriaUsuario>());
         }
         EntityManager em = null;
         try {
@@ -57,6 +64,18 @@ public class UsuarioJpaController implements Serializable {
                 attachedTelefonoUsuarioList.add(telefonoUsuarioListTelefonoUsuarioToAttach);
             }
             usuario.setTelefonoUsuarioList(attachedTelefonoUsuarioList);
+            List<UsuarioGrado> attachedUsuarioGradoList = new ArrayList<UsuarioGrado>();
+            for (UsuarioGrado usuarioGradoListUsuarioGradoToAttach : usuario.getUsuarioGradoList()) {
+                usuarioGradoListUsuarioGradoToAttach = em.getReference(usuarioGradoListUsuarioGradoToAttach.getClass(), usuarioGradoListUsuarioGradoToAttach.getIdUsuarioGrado());
+                attachedUsuarioGradoList.add(usuarioGradoListUsuarioGradoToAttach);
+            }
+            usuario.setUsuarioGradoList(attachedUsuarioGradoList);
+            List<MateriaUsuario> attachedMateriaUsuarioList = new ArrayList<MateriaUsuario>();
+            for (MateriaUsuario materiaUsuarioListMateriaUsuario1ToAttach : usuario.getMateriaUsuarioList()) {
+                materiaUsuarioListMateriaUsuario1ToAttach = em.getReference(materiaUsuarioListMateriaUsuario1ToAttach.getClass(), materiaUsuarioListMateriaUsuario1ToAttach.getIdMatusu());
+                attachedMateriaUsuarioList.add(materiaUsuarioListMateriaUsuario1ToAttach);
+            }
+            usuario.setMateriaUsuarioList(attachedMateriaUsuarioList);
             em.persist(usuario);
             if (idTipo != null) {
                 idTipo.getUsuarioList().add(usuario);
@@ -71,12 +90,25 @@ public class UsuarioJpaController implements Serializable {
                     oldIdUsuarioOfTelefonoUsuarioListTelefonoUsuario = em.merge(oldIdUsuarioOfTelefonoUsuarioListTelefonoUsuario);
                 }
             }
-            em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findUsuario(usuario.getIdUsuario()) != null) {
-                throw new PreexistingEntityException("Usuario " + usuario + " already exists.", ex);
+            for (UsuarioGrado usuarioGradoListUsuarioGrado : usuario.getUsuarioGradoList()) {
+                Usuario oldIdUsuarioOfUsuarioGradoListUsuarioGrado = usuarioGradoListUsuarioGrado.getIdUsuario();
+                usuarioGradoListUsuarioGrado.setIdUsuario(usuario);
+                usuarioGradoListUsuarioGrado = em.merge(usuarioGradoListUsuarioGrado);
+                if (oldIdUsuarioOfUsuarioGradoListUsuarioGrado != null) {
+                    oldIdUsuarioOfUsuarioGradoListUsuarioGrado.getUsuarioGradoList().remove(usuarioGradoListUsuarioGrado);
+                    oldIdUsuarioOfUsuarioGradoListUsuarioGrado = em.merge(oldIdUsuarioOfUsuarioGradoListUsuarioGrado);
+                }
             }
-            throw ex;
+            for (MateriaUsuario materiaUsuarioListMateriaUsuario1 : usuario.getMateriaUsuarioList()) {
+                Usuario oldIdUsuarioOfMateriaUsuarioListMateriaUsuario1 = materiaUsuarioListMateriaUsuario1.getIdUsuario();
+                materiaUsuarioListMateriaUsuario1.setIdUsuario(usuario);
+                materiaUsuarioListMateriaUsuario1 = em.merge(materiaUsuarioListMateriaUsuario1);
+                if (oldIdUsuarioOfMateriaUsuarioListMateriaUsuario1 != null) {
+                    oldIdUsuarioOfMateriaUsuarioListMateriaUsuario1.getMateriaUsuarioList().remove(materiaUsuarioListMateriaUsuario1);
+                    oldIdUsuarioOfMateriaUsuarioListMateriaUsuario1 = em.merge(oldIdUsuarioOfMateriaUsuarioListMateriaUsuario1);
+                }
+            }
+            em.getTransaction().commit();
         } finally {
             if (em != null) {
                 em.close();
@@ -94,6 +126,10 @@ public class UsuarioJpaController implements Serializable {
             TipoUsuario idTipoNew = usuario.getIdTipo();
             List<TelefonoUsuario> telefonoUsuarioListOld = persistentUsuario.getTelefonoUsuarioList();
             List<TelefonoUsuario> telefonoUsuarioListNew = usuario.getTelefonoUsuarioList();
+            List<UsuarioGrado> usuarioGradoListOld = persistentUsuario.getUsuarioGradoList();
+            List<UsuarioGrado> usuarioGradoListNew = usuario.getUsuarioGradoList();
+            List<MateriaUsuario> materiaUsuarioListOld = persistentUsuario.getMateriaUsuarioList();
+            List<MateriaUsuario> materiaUsuarioListNew = usuario.getMateriaUsuarioList();
             List<String> illegalOrphanMessages = null;
             for (TelefonoUsuario telefonoUsuarioListOldTelefonoUsuario : telefonoUsuarioListOld) {
                 if (!telefonoUsuarioListNew.contains(telefonoUsuarioListOldTelefonoUsuario)) {
@@ -101,6 +137,22 @@ public class UsuarioJpaController implements Serializable {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
                     illegalOrphanMessages.add("You must retain TelefonoUsuario " + telefonoUsuarioListOldTelefonoUsuario + " since its idUsuario field is not nullable.");
+                }
+            }
+            for (UsuarioGrado usuarioGradoListOldUsuarioGrado : usuarioGradoListOld) {
+                if (!usuarioGradoListNew.contains(usuarioGradoListOldUsuarioGrado)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain UsuarioGrado " + usuarioGradoListOldUsuarioGrado + " since its idUsuario field is not nullable.");
+                }
+            }
+            for (MateriaUsuario materiaUsuarioListOldMateriaUsuario1 : materiaUsuarioListOld) {
+                if (!materiaUsuarioListNew.contains(materiaUsuarioListOldMateriaUsuario1)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain MateriaUsuario1 " + materiaUsuarioListOldMateriaUsuario1 + " since its idUsuario field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -117,6 +169,20 @@ public class UsuarioJpaController implements Serializable {
             }
             telefonoUsuarioListNew = attachedTelefonoUsuarioListNew;
             usuario.setTelefonoUsuarioList(telefonoUsuarioListNew);
+            List<UsuarioGrado> attachedUsuarioGradoListNew = new ArrayList<UsuarioGrado>();
+            for (UsuarioGrado usuarioGradoListNewUsuarioGradoToAttach : usuarioGradoListNew) {
+                usuarioGradoListNewUsuarioGradoToAttach = em.getReference(usuarioGradoListNewUsuarioGradoToAttach.getClass(), usuarioGradoListNewUsuarioGradoToAttach.getIdUsuarioGrado());
+                attachedUsuarioGradoListNew.add(usuarioGradoListNewUsuarioGradoToAttach);
+            }
+            usuarioGradoListNew = attachedUsuarioGradoListNew;
+            usuario.setUsuarioGradoList(usuarioGradoListNew);
+            List<MateriaUsuario> attachedMateriaUsuarioListNew = new ArrayList<MateriaUsuario>();
+            for (MateriaUsuario materiaUsuarioListNewMateriaUsuario1ToAttach : materiaUsuarioListNew) {
+                materiaUsuarioListNewMateriaUsuario1ToAttach = em.getReference(materiaUsuarioListNewMateriaUsuario1ToAttach.getClass(), materiaUsuarioListNewMateriaUsuario1ToAttach.getIdMatusu());
+                attachedMateriaUsuarioListNew.add(materiaUsuarioListNewMateriaUsuario1ToAttach);
+            }
+            materiaUsuarioListNew = attachedMateriaUsuarioListNew;
+            usuario.setMateriaUsuarioList(materiaUsuarioListNew);
             usuario = em.merge(usuario);
             if (idTipoOld != null && !idTipoOld.equals(idTipoNew)) {
                 idTipoOld.getUsuarioList().remove(usuario);
@@ -134,6 +200,28 @@ public class UsuarioJpaController implements Serializable {
                     if (oldIdUsuarioOfTelefonoUsuarioListNewTelefonoUsuario != null && !oldIdUsuarioOfTelefonoUsuarioListNewTelefonoUsuario.equals(usuario)) {
                         oldIdUsuarioOfTelefonoUsuarioListNewTelefonoUsuario.getTelefonoUsuarioList().remove(telefonoUsuarioListNewTelefonoUsuario);
                         oldIdUsuarioOfTelefonoUsuarioListNewTelefonoUsuario = em.merge(oldIdUsuarioOfTelefonoUsuarioListNewTelefonoUsuario);
+                    }
+                }
+            }
+            for (UsuarioGrado usuarioGradoListNewUsuarioGrado : usuarioGradoListNew) {
+                if (!usuarioGradoListOld.contains(usuarioGradoListNewUsuarioGrado)) {
+                    Usuario oldIdUsuarioOfUsuarioGradoListNewUsuarioGrado = usuarioGradoListNewUsuarioGrado.getIdUsuario();
+                    usuarioGradoListNewUsuarioGrado.setIdUsuario(usuario);
+                    usuarioGradoListNewUsuarioGrado = em.merge(usuarioGradoListNewUsuarioGrado);
+                    if (oldIdUsuarioOfUsuarioGradoListNewUsuarioGrado != null && !oldIdUsuarioOfUsuarioGradoListNewUsuarioGrado.equals(usuario)) {
+                        oldIdUsuarioOfUsuarioGradoListNewUsuarioGrado.getUsuarioGradoList().remove(usuarioGradoListNewUsuarioGrado);
+                        oldIdUsuarioOfUsuarioGradoListNewUsuarioGrado = em.merge(oldIdUsuarioOfUsuarioGradoListNewUsuarioGrado);
+                    }
+                }
+            }
+            for (MateriaUsuario materiaUsuarioListNewMateriaUsuario1 : materiaUsuarioListNew) {
+                if (!materiaUsuarioListOld.contains(materiaUsuarioListNewMateriaUsuario1)) {
+                    Usuario oldIdUsuarioOfMateriaUsuarioListNewMateriaUsuario1 = materiaUsuarioListNewMateriaUsuario1.getIdUsuario();
+                    materiaUsuarioListNewMateriaUsuario1.setIdUsuario(usuario);
+                    materiaUsuarioListNewMateriaUsuario1 = em.merge(materiaUsuarioListNewMateriaUsuario1);
+                    if (oldIdUsuarioOfMateriaUsuarioListNewMateriaUsuario1 != null && !oldIdUsuarioOfMateriaUsuarioListNewMateriaUsuario1.equals(usuario)) {
+                        oldIdUsuarioOfMateriaUsuarioListNewMateriaUsuario1.getMateriaUsuarioList().remove(materiaUsuarioListNewMateriaUsuario1);
+                        oldIdUsuarioOfMateriaUsuarioListNewMateriaUsuario1 = em.merge(oldIdUsuarioOfMateriaUsuarioListNewMateriaUsuario1);
                     }
                 }
             }
@@ -173,6 +261,20 @@ public class UsuarioJpaController implements Serializable {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
                 illegalOrphanMessages.add("This Usuario (" + usuario + ") cannot be destroyed since the TelefonoUsuario " + telefonoUsuarioListOrphanCheckTelefonoUsuario + " in its telefonoUsuarioList field has a non-nullable idUsuario field.");
+            }
+            List<UsuarioGrado> usuarioGradoListOrphanCheck = usuario.getUsuarioGradoList();
+            for (UsuarioGrado usuarioGradoListOrphanCheckUsuarioGrado : usuarioGradoListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Usuario (" + usuario + ") cannot be destroyed since the UsuarioGrado " + usuarioGradoListOrphanCheckUsuarioGrado + " in its usuarioGradoList field has a non-nullable idUsuario field.");
+            }
+            List<MateriaUsuario> materiaUsuarioListOrphanCheck = usuario.getMateriaUsuarioList();
+            for (MateriaUsuario materiaUsuarioListOrphanCheckMateriaUsuario1 : materiaUsuarioListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Usuario (" + usuario + ") cannot be destroyed since the MateriaUsuario1 " + materiaUsuarioListOrphanCheckMateriaUsuario1 + " in its materiaUsuarioList field has a non-nullable idUsuario field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

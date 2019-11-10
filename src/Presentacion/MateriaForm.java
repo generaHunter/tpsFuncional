@@ -6,6 +6,7 @@
 package Presentacion;
 
 import Datos.MateriaJpaController;
+import Datos.exceptions.IllegalOrphanException;
 import Datos.exceptions.NonexistentEntityException;
 import Logica_Negocio.Materia;
 import java.math.BigDecimal;
@@ -290,7 +291,9 @@ public class MateriaForm extends javax.swing.JFrame {
             }
         } catch (NonexistentEntityException ex) {
             Logger.getLogger(MateriaForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (IllegalOrphanException ex) {
+             Logger.getLogger(MateriaForm.class.getName()).log(Level.SEVERE, null, ex);
+         }
 
 
     }//GEN-LAST:event_btnDeleteActionPerformed
