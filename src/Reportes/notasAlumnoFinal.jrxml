@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\ronal\\Documents\\Ciclo-II-2019\\Tecnica de producion de sistemas\\TPSV\\tpsFuncional\\src\\Reportes\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="id_alumno" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from (select m.materia, 
+(select ROUND(SUM(n1.nota1+n1.nota2+n1.nota3)/3,2) as Promedio from SYSTEM.nota n1
+inner join SYSTEM.materia_usuario mu1 on mu1.id_matusu = n1.id_matusu
+inner join SYSTEM.materia m1 on m1.id_materia = mu1.id_materia
+where id_periodo = 1 and id_alumno = $P{id_alumno} and m1.id_materia = 22) as Periodo1,  
+(select ROUND(SUM(n2.nota1+n2.nota2+n2.nota3)/3,2) as Promedio from  SYSTEM.nota n2
+inner join SYSTEM.materia_usuario mu2 on mu2.id_matusu = n2.id_matusu
+inner join SYSTEM.materia m2 on m2.id_materia = mu2.id_materia
+where id_periodo = 2 and id_alumno = $P{id_alumno} and m2.id_materia = 22) as Periodo2,  
+(select ROUND(SUM(n3.nota1+n3.nota2+n3.nota3)/3,2) as Promedio from  SYSTEM.nota n3
+inner join SYSTEM.materia_usuario mu3 on mu3.id_matusu = n3.id_matusu
+inner join SYSTEM.materia m3 on m3.id_materia = mu3.id_materia
+where id_periodo = 3 and id_alumno = $P{id_alumno} and m3.id_materia = 22) as Periodo3,
+ROUND(avg((select ROUND(SUM(n1.nota1+n1.nota2+n1.nota3)/3,2) as Promedio from SYSTEM.nota n1
+inner join SYSTEM.materia_usuario mu1 on mu1.id_matusu = n1.id_matusu
+inner join SYSTEM.materia m1 on m1.id_materia = mu1.id_materia
+where id_periodo = 1 and id_alumno = $P{id_alumno} and m1.id_materia = 22)+
+(select ROUND(SUM(n2.nota1+n2.nota2+n2.nota3)/3,2) as Promedio from  SYSTEM.nota n2
+inner join SYSTEM.materia_usuario mu2 on mu2.id_matusu = n2.id_matusu
+inner join SYSTEM.materia m2 on m2.id_materia = mu2.id_materia
+where id_periodo = 2 and id_alumno = $P{id_alumno} and m2.id_materia = 22)+
+(select ROUND(SUM(n3.nota1+n3.nota2+n3.nota3)/3,2) as Promedio from  SYSTEM.nota n3
+inner join SYSTEM.materia_usuario mu3 on mu3.id_matusu = n3.id_matusu
+inner join SYSTEM.materia m3 on m3.id_materia = mu3.id_materia
+where id_periodo = 3 and id_alumno = $P{id_alumno} and m3.id_materia = 22))/3,2) as NotaFinal, Concat(a.nombre, Concat(' ', a.apellido)) as Nombre,
+g.grado as Grado, t.turno
+from SYSTEM.nota n
+inner join SYSTEM.materia_usuario mu on mu.id_matusu = n.id_matusu
+inner join SYSTEM.materia m on m.id_materia = mu.id_materia
+inner join SYSTEM.alumno a on a.id_alumno = n.id_alumno
+inner join SYSTEM.matricula m on m.id_alumno = a.id_alumno
+inner join SYSTEM.grado g on g.id_grado = m.id_grado
+inner join SYSTEM.turno t on t.id_turno = m.id_turno
+where mu.id_materia = 22 and n.id_alumno = $P{id_alumno} and m.estado = 1
+GROUP BY m.materia, Concat(a.nombre, Concat(' ', a.apellido)), g.grado, t.turno)
+union
+(select m.materia, 
+(select ROUND(SUM(n1.nota1+n1.nota2+n1.nota3)/3,2) as Promedio from SYSTEM.nota n1
+inner join SYSTEM.materia_usuario mu1 on mu1.id_matusu = n1.id_matusu
+inner join SYSTEM.materia m1 on m1.id_materia = mu1.id_materia
+where id_periodo = 1 and id_alumno = $P{id_alumno} and m1.id_materia = 21) as Periodo1,  
+(select ROUND(SUM(n2.nota1+n2.nota2+n2.nota3)/3,2) as Promedio from  SYSTEM.nota n2
+inner join SYSTEM.materia_usuario mu2 on mu2.id_matusu = n2.id_matusu
+inner join SYSTEM.materia m2 on m2.id_materia = mu2.id_materia
+where id_periodo = 2 and id_alumno = $P{id_alumno} and m2.id_materia = 21) as Periodo2,  
+(select ROUND(SUM(n3.nota1+n3.nota2+n3.nota3)/3,2) as Promedio from  SYSTEM.nota n3
+inner join SYSTEM.materia_usuario mu3 on mu3.id_matusu = n3.id_matusu
+inner join SYSTEM.materia m3 on m3.id_materia = mu3.id_materia
+where id_periodo = 3 and id_alumno = $P{id_alumno} and m3.id_materia = 21) as Periodo3,
+ROUND(avg((select ROUND(SUM(n1.nota1+n1.nota2+n1.nota3)/3,2) as Promedio from SYSTEM.nota n1
+inner join SYSTEM.materia_usuario mu1 on mu1.id_matusu = n1.id_matusu
+inner join SYSTEM.materia m1 on m1.id_materia = mu1.id_materia
+where id_periodo = 1 and id_alumno = $P{id_alumno} and m1.id_materia = 21)+
+(select ROUND(SUM(n2.nota1+n2.nota2+n2.nota3)/3,2) as Promedio from  SYSTEM.nota n2
+inner join SYSTEM.materia_usuario mu2 on mu2.id_matusu = n2.id_matusu
+inner join SYSTEM.materia m2 on m2.id_materia = mu2.id_materia
+where id_periodo = 2 and id_alumno = $P{id_alumno} and m2.id_materia = 21)+
+(select ROUND(SUM(n3.nota1+n3.nota2+n3.nota3)/3,2) as Promedio from  SYSTEM.nota n3
+inner join SYSTEM.materia_usuario mu3 on mu3.id_matusu = n3.id_matusu
+inner join SYSTEM.materia m3 on m3.id_materia = mu3.id_materia
+where id_periodo = 3 and id_alumno = $P{id_alumno} and m3.id_materia = 21) )/3,2) as NotaFinal, Concat(a.nombre, Concat(' ', a.apellido)) as Nombre,
+g.grado as Grado, t.turno
+from SYSTEM.nota n
+inner join SYSTEM.materia_usuario mu on mu.id_matusu = n.id_matusu
+inner join SYSTEM.materia m on m.id_materia = mu.id_materia
+inner join SYSTEM.alumno a on a.id_alumno = n.id_alumno
+inner join SYSTEM.matricula m on m.id_alumno = a.id_alumno
+inner join SYSTEM.grado g on g.id_grado = m.id_grado
+inner join SYSTEM.turno t on t.id_turno = m.id_turno
+where mu.id_materia = 21 and n.id_alumno = $P{id_alumno} and m.estado = 1
+GROUP BY m.materia, Concat(a.nombre, Concat(' ', a.apellido)), g.grado, t.turno)
+union
+(select m.materia, 
+(select ROUND(SUM(n1.nota1+n1.nota2+n1.nota3)/3,2) as Promedio from SYSTEM.nota n1
+inner join SYSTEM.materia_usuario mu1 on mu1.id_matusu = n1.id_matusu
+inner join SYSTEM.materia m1 on m1.id_materia = mu1.id_materia
+where id_periodo = 1 and id_alumno = $P{id_alumno} and m1.id_materia = 2) as Periodo1,  
+(select ROUND(SUM(n2.nota1+n2.nota2+n2.nota3)/3,2) as Promedio from  SYSTEM.nota n2
+inner join SYSTEM.materia_usuario mu2 on mu2.id_matusu = n2.id_matusu
+inner join SYSTEM.materia m2 on m2.id_materia = mu2.id_materia
+where id_periodo = 2 and id_alumno = $P{id_alumno} and m2.id_materia = 2) as Periodo2,  
+(select ROUND(SUM(n3.nota1+n3.nota2+n3.nota3)/3,2) as Promedio from  SYSTEM.nota n3
+inner join SYSTEM.materia_usuario mu3 on mu3.id_matusu = n3.id_matusu
+inner join SYSTEM.materia m3 on m3.id_materia = mu3.id_materia
+where id_periodo = 3 and id_alumno = $P{id_alumno} and m3.id_materia = 2) as Periodo3,
+ROUND(avg((select ROUND(SUM(n1.nota1+n1.nota2+n1.nota3)/3,2) as Promedio from SYSTEM.nota n1
+inner join SYSTEM.materia_usuario mu1 on mu1.id_matusu = n1.id_matusu
+inner join SYSTEM.materia m1 on m1.id_materia = mu1.id_materia
+where id_periodo = 1 and id_alumno = $P{id_alumno} and m1.id_materia = 2)+
+(select ROUND(SUM(n2.nota1+n2.nota2+n2.nota3)/3,2) as Promedio from  SYSTEM.nota n2
+inner join SYSTEM.materia_usuario mu2 on mu2.id_matusu = n2.id_matusu
+inner join SYSTEM.materia m2 on m2.id_materia = mu2.id_materia
+where id_periodo = 2 and id_alumno = $P{id_alumno} and m2.id_materia = 2)+
+(select ROUND(SUM(n3.nota1+n3.nota2+n3.nota3)/3,2) as Promedio from  SYSTEM.nota n3
+inner join SYSTEM.materia_usuario mu3 on mu3.id_matusu = n3.id_matusu
+inner join SYSTEM.materia m3 on m3.id_materia = mu3.id_materia
+where id_periodo = 3 and id_alumno = $P{id_alumno} and m3.id_materia = 2) )/3,2) as NotaFinal, Concat(a.nombre, Concat(' ', a.apellido)) as Nombre,
+g.grado as Grado, t.turno
+from SYSTEM.nota n
+inner join SYSTEM.materia_usuario mu on mu.id_matusu = n.id_matusu
+inner join SYSTEM.materia m on m.id_materia = mu.id_materia
+inner join SYSTEM.alumno a on a.id_alumno = n.id_alumno
+inner join SYSTEM.matricula m on m.id_alumno = a.id_alumno
+inner join SYSTEM.grado g on g.id_grado = m.id_grado
+inner join SYSTEM.turno t on t.id_turno = m.id_turno
+where mu.id_materia = 2 and n.id_alumno = $P{id_alumno} and m.estado = 1
+GROUP BY m.materia, Concat(a.nombre, Concat(' ', a.apellido)), g.grado, t.turno)
+union
+(select m.materia, 
+(select ROUND(SUM(n1.nota1+n1.nota2+n1.nota3)/3,2) as Promedio from SYSTEM.nota n1
+inner join SYSTEM.materia_usuario mu1 on mu1.id_matusu = n1.id_matusu
+inner join SYSTEM.materia m1 on m1.id_materia = mu1.id_materia
+where id_periodo = 1 and id_alumno = $P{id_alumno} and m1.id_materia = 62) as Periodo1,  
+(select ROUND(SUM(n2.nota1+n2.nota2+n2.nota3)/3,2) as Promedio from  SYSTEM.nota n2
+inner join SYSTEM.materia_usuario mu2 on mu2.id_matusu = n2.id_matusu
+inner join SYSTEM.materia m2 on m2.id_materia = mu2.id_materia
+where id_periodo = 2 and id_alumno = $P{id_alumno} and m2.id_materia = 62) as Periodo2,  
+(select ROUND(SUM(n3.nota1+n3.nota2+n3.nota3)/3,2) as Promedio from  SYSTEM.nota n3
+inner join SYSTEM.materia_usuario mu3 on mu3.id_matusu = n3.id_matusu
+inner join SYSTEM.materia m3 on m3.id_materia = mu3.id_materia
+where id_periodo = 3 and id_alumno = $P{id_alumno} and m3.id_materia = 62) as Periodo3,
+ROUND(avg((select ROUND(SUM(n1.nota1+n1.nota2+n1.nota3)/3,2) as Promedio from SYSTEM.nota n1
+inner join SYSTEM.materia_usuario mu1 on mu1.id_matusu = n1.id_matusu
+inner join SYSTEM.materia m1 on m1.id_materia = mu1.id_materia
+where id_periodo = 1 and id_alumno = $P{id_alumno} and m1.id_materia = 62)+
+(select ROUND(SUM(n2.nota1+n2.nota2+n2.nota3)/3,2) as Promedio from  SYSTEM.nota n2
+inner join SYSTEM.materia_usuario mu2 on mu2.id_matusu = n2.id_matusu
+inner join SYSTEM.materia m2 on m2.id_materia = mu2.id_materia
+where id_periodo = 2 and id_alumno = $P{id_alumno} and m2.id_materia = 62)+
+(select ROUND(SUM(n3.nota1+n3.nota2+n3.nota3)/3,2) as Promedio from  SYSTEM.nota n3
+inner join SYSTEM.materia_usuario mu3 on mu3.id_matusu = n3.id_matusu
+inner join SYSTEM.materia m3 on m3.id_materia = mu3.id_materia
+where id_periodo = 3 and id_alumno = $P{id_alumno} and m3.id_materia = 62) )/3,2) as NotaFinal, Concat(a.nombre, Concat(' ', a.apellido)) as Nombre,
+g.grado as Grado, t.turno
+from SYSTEM.nota n
+inner join SYSTEM.materia_usuario mu on mu.id_matusu = n.id_matusu
+inner join SYSTEM.materia m on m.id_materia = mu.id_materia
+inner join SYSTEM.alumno a on a.id_alumno = n.id_alumno
+inner join SYSTEM.matricula m on m.id_alumno = a.id_alumno
+inner join SYSTEM.grado g on g.id_grado = m.id_grado
+inner join SYSTEM.turno t on t.id_turno = m.id_turno
+where mu.id_materia = 62 and n.id_alumno = $P{id_alumno} and m.estado = 1
+GROUP BY m.materia, Concat(a.nombre, Concat(' ', a.apellido)), g.grado, t.turno)]]>
+	</queryString>
+	<field name="MATERIA" class="java.lang.String"/>
+	<field name="PERIODO1" class="java.math.BigDecimal"/>
+	<field name="PERIODO2" class="java.math.BigDecimal"/>
+	<field name="PERIODO3" class="java.math.BigDecimal"/>
+	<field name="NOTAFINAL" class="java.math.BigDecimal"/>
+	<field name="NOMBRE" class="java.lang.String"/>
+	<field name="GRADO" class="java.lang.String"/>
+	<field name="TURNO" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="60" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="70" splitType="Stretch">
+			<textField>
+				<reportElement x="36" y="15" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMBRE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="228" y="15" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{GRADO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="417" y="15" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TURNO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement x="18" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[MATERIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="138" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[PERIODO1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="250" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[PERIODO2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="361" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[PERIODO3]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="484" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[NOTAFINAL]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="62" splitType="Stretch">
+			<textField>
+				<reportElement x="18" y="16" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{MATERIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="138" y="16" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{PERIODO1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="16" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{PERIODO2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="361" y="16" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{PERIODO3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="484" y="16" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{NOTAFINAL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="113" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
