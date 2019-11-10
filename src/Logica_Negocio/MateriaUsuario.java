@@ -40,6 +40,10 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "MateriaUsuario.findByIdMatusu", query = "SELECT m FROM MateriaUsuario m WHERE m.idMatusu = :idMatusu")})
 public class MateriaUsuario implements Serializable {
 
+    @JoinColumn(name = "ID_GRADO", referencedColumnName = "ID_GRADO")
+    @ManyToOne
+    private Grado idGrado;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idMatusu")
     private List<AlumnoProfesor> alumnoProfesorList;
 
@@ -61,10 +65,11 @@ public class MateriaUsuario implements Serializable {
     public MateriaUsuario() {
     }
 
-    public MateriaUsuario(BigDecimal idMatusu,Materia idMateria,Usuario idUsuario) {
+    public MateriaUsuario(BigDecimal idMatusu,Materia idMateria,Usuario idUsuario,Grado idgrado) {
         this.idMatusu = idMatusu;
         this.idMateria=idMateria;
         this.idUsuario=idUsuario;
+        this.idGrado=idgrado;
     }
 
     public BigDecimal getIdMatusu() {
@@ -121,20 +126,21 @@ public class MateriaUsuario implements Serializable {
         try {
             cbMatUsu.removeAllItems();
             MateriaUsuarioJpaController CMatUsu= new MateriaUsuarioJpaController();
-            List<MateriaUsuario> ListMatUsu = CMatUsu.findMateriaUsuarioEntities();
+            List<MateriaUsuario> ListMatUsu = CMatUsu.findMateriaUsuario1Entities();
             for (int i = 0; i < ListMatUsu.size(); i++) {
 
-                if(ListMatUsu.get(i).idUsuario.getIdUsuario().equals(idProfesor) && ListMatUsu.get(i).idUsuario.getUsuarioGradoList().get(Integer.parseInt(idGrado.toString())-1).getIdGrado().getGrado().equals(grado))
+                if(ListMatUsu.get(i).idUsuario.getIdUsuario().equals(idProfesor) && ListMatUsu.get(i).idGrado.getIdGrado().equals(idGrado))
                 {
-                    cbMatUsu.addItem(
-                            new MateriaUsuario(
+                    JOptionPane.showMessageDialog(null, ListMatUsu.get(i).idGrado.getIdGrado()+ListMatUsu.get(i).idMateria.getMateria());
+                    cbMatUsu.addItem(new MateriaUsuario(
                             ListMatUsu.get(i).idMatusu,
                             ListMatUsu.get(i).idMateria,
-                            ListMatUsu.get(i).idUsuario
+                            ListMatUsu.get(i).idUsuario,
+                            ListMatUsu.get(i).idGrado
                             )           
                     );     
                     break;
-                   
+                  
                 }
             }
         } catch (Exception e) {
@@ -149,6 +155,14 @@ public class MateriaUsuario implements Serializable {
 
     public void setAlumnoProfesorList(List<AlumnoProfesor> alumnoProfesorList) {
         this.alumnoProfesorList = alumnoProfesorList;
+    }
+
+    public Grado getIdGrado() {
+        return idGrado;
+    }
+
+    public void setIdGrado(Grado idGrado) {
+        this.idGrado = idGrado;
     }
     
 }

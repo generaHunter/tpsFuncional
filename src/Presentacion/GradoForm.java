@@ -6,6 +6,7 @@
 package Presentacion;
 
 import Datos.GradoJpaController;
+import Datos.exceptions.IllegalOrphanException;
 import Datos.exceptions.NonexistentEntityException;
 import Logica_Negocio.Grado;
 import java.util.List;
@@ -275,6 +276,8 @@ public class GradoForm extends javax.swing.JFrame {
                 CGrado.destroy(gradoEdit.getIdGrado());
             }
         } catch (NonexistentEntityException ex) {
+            Logger.getLogger(GradoForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalOrphanException ex) {
             Logger.getLogger(GradoForm.class.getName()).log(Level.SEVERE, null, ex);
         }
         cargarGrado();

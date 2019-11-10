@@ -6,7 +6,6 @@
 package Datos;
 
 import Datos.exceptions.NonexistentEntityException;
-import Datos.exceptions.PreexistingEntityException;
 import Logica_Negocio.TipoUsuario;
 import java.io.Serializable;
 import javax.persistence.Query;
@@ -27,7 +26,7 @@ import javax.persistence.Persistence;
  */
 public class TipoUsuarioJpaController implements Serializable {
 
-    public TipoUsuarioJpaController() {
+    public TipoUsuarioJpaController( ) {
          this.emf = Persistence.createEntityManagerFactory("esucelaProyectoPU");
     }
     private EntityManagerFactory emf = null;
@@ -36,7 +35,7 @@ public class TipoUsuarioJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(TipoUsuario tipoUsuario) throws PreexistingEntityException, Exception {
+    public void create(TipoUsuario tipoUsuario) {
         if (tipoUsuario.getUsuarioList() == null) {
             tipoUsuario.setUsuarioList(new ArrayList<Usuario>());
         }
@@ -61,11 +60,6 @@ public class TipoUsuarioJpaController implements Serializable {
                 }
             }
             em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findTipoUsuario(tipoUsuario.getIdTipo()) != null) {
-                throw new PreexistingEntityException("TipoUsuario " + tipoUsuario + " already exists.", ex);
-            }
-            throw ex;
         } finally {
             if (em != null) {
                 em.close();

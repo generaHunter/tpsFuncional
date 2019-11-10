@@ -8,6 +8,7 @@ package Presentacion;
 
 import Datos.MateriaUsuarioJpaController;
 import Datos.UsuarioGradoJpaController;
+import Datos.exceptions.IllegalOrphanException;
 import Datos.exceptions.NonexistentEntityException;
 import Logica_Negocio.Grado;
 import Logica_Negocio.Materia;
@@ -265,7 +266,7 @@ public class ProfesorGradoMateria extends javax.swing.JFrame {
             modeloTable.setRowCount(0);
             Object o[] = null;
             List<UsuarioGrado> ListA = CUsuarioGrado.findUsuarioGradoEntities();
-            List<MateriaUsuario> ListM = CMateriaUsuario.findMateriaUsuarioEntities();
+            List<MateriaUsuario> ListM = CMateriaUsuario.findMateriaUsuario1Entities();
             for (int i = 0; i < ListA.size(); i++) {
             
                 modeloTable.addRow(o);
@@ -341,7 +342,9 @@ public class ProfesorGradoMateria extends javax.swing.JFrame {
             
         } catch (NonexistentEntityException ex) {
             Logger.getLogger(usuariosForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (IllegalOrphanException ex) {
+             Logger.getLogger(ProfesorGradoMateria.class.getName()).log(Level.SEVERE, null, ex);
+         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void tablaProfesorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaProfesorMouseClicked

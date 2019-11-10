@@ -38,6 +38,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Grado.findByGrado", query = "SELECT g FROM Grado g WHERE g.grado = :grado")})
 public class Grado implements Serializable {
 
+    @OneToMany(mappedBy = "idGrado")
+    private List<MateriaUsuario> materiaUsuario1List;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idGrado")
     private List<Matricula> matriculaList;
 
@@ -142,6 +145,15 @@ public class Grado implements Serializable {
 
     public void setMatriculaList(List<Matricula> matriculaList) {
         this.matriculaList = matriculaList;
+    }
+
+    @XmlTransient
+    public List<MateriaUsuario> getMateriaUsuario1List() {
+        return materiaUsuario1List;
+    }
+
+    public void setMateriaUsuario1List(List<MateriaUsuario> materiaUsuario1List) {
+        this.materiaUsuario1List = materiaUsuario1List;
     }
     
     
