@@ -58,7 +58,7 @@ public class NotaController {
         }
     }
     
-    public void Consultar(JTable tabla,DefaultTableModel tablaNota)
+    public void Consultar(JTable tabla,DefaultTableModel tablaNota,int idProfesor,int idGrado,int idMateria)
     {
          conn=new DB(); 
          tablaNota.setRowCount(0);
@@ -68,7 +68,8 @@ public class NotaController {
         "JOIN materia m ON mu.id_materia=m.id_materia\n" +
         "JOIN alumno a ON n.id_alumno=a.id_alumno\n" +
         "JOIN usuario u ON mu.id_usuario=u.id_usuario\n" +
-        "WHERE p.id_periodo=1\n" +
+        "JOIN matricula ma ON a.id_alumno=ma.id_alumno\n"+
+        "WHERE p.id_periodo=1 AND ma.id_grado="+idGrado+" AND u.id_usuario="+idProfesor +" AND m.id_materia="+idMateria+"\n" +
         "GROUP BY id_nota,a.id_alumno,u.nombre,a.nombre ||' '|| a.apellido,m.materia\n" +
         "ORDER BY id_nota";
         Statement st = null ;
@@ -78,9 +79,6 @@ public class NotaController {
         ResultSet rsa = null ;
         Statement sta3 = null ;
         ResultSet rsa3 = null ;
-        boolean f1=false;
-        boolean f2=false;
-        boolean f3=false;
          try {
          
           st = conn.getConection().createStatement();
@@ -89,7 +87,6 @@ public class NotaController {
          while (rs.next()) {                                 
                    for (int i = 0; i < 6; i++) {
                        filas[i] = rs.getString(i+1);
-                       f1=true;
                        //JOptionPane.showMessageDialog(null, "primer "+rs.getString(2));
                        if(i>=5)
                        {
@@ -104,10 +101,12 @@ public class NotaController {
                             "ORDER BY id_nota";
                             sta = conn.getConection().createStatement();
                             rsa = sta.executeQuery(sqla);
-                           while (rsa.next()) {  
-                             JOptionPane.showMessageDialog(null, ""+rsa.getString(1));
-                                for (int j = 0; j < 2; j++) {
-                                     //JOptionPane.showMessageDialog(null, "seg"+rsa.getString(2));
+                            //JOptionPane.showMessageDialog(null, ""+rs.getString(3));
+                            
+                            if(rsa.next())
+                            {
+                                      for (int j = 0; j < 2; j++) {
+                                    
                                     filas[j+i] = rsa.getString(j+1);
                                     
                                     if(j>=1)
@@ -123,29 +122,76 @@ public class NotaController {
                                         "ORDER BY id_nota";
                                         sta3 = conn.getConection().createStatement();
                                         rsa3 = sta3.executeQuery(sqla3);
-                                        
-                                        while(rsa3.next())
-                                        {
-                                            // JOptionPane.showMessageDialog(null, "tercero"+rsa3.getString(2));
-                                            for (int k = 0; k < 2; k++) {
-                                                 filas[k+j+i] = rsa3.getString(k+1);
-                                            }
-                                            if(rsa3.next())
-                                            {
+                                        if(rsa3.next())
+                                           {
+                                                for (int k = 0; k < 2; k++) {
                                                 
+  
+                                                      filas[k+j+i] = rsa3.getString(k+1);
+                                       
                                             }
-                                             //tablaNota.addRow(filas);
-                                        }
+                                           
+                                              tablaNota.addRow(filas);
+                                           }
+                                           else
+                                           {
+                                                for (int k = 0; k < 2; k++) {
+
+                                                     filas[k+j+i] ="";
+                                            }
+                                           
+                                              tablaNota.addRow(filas);
+                                           }
+                                        
                                     }
                                   }
-                          }
+                            }
+                            else
+                            {
+                                      for (int j = 0; j < 2; j++) {
+                                    
+                                    filas[j+i] = "";
+                                    
+                                    if(j>=1)
+                                    {
+                                        j=2;
+                                        String sqla3 ="SELECT id_nota,ROUND(SUM(nota1+nota2+nota3)/3,2) AS Tercer_Periodo FROM nota n\n" +
+                                        "JOIN periodo p ON n.id_periodo=p.id_periodo\n" +
+                                        "JOIN materia_usuario mu ON n.id_matusu=mu.id_matusu\n" +
+                                        "JOIN materia m ON mu.id_materia=m.id_materia\n" +
+                                        "JOIN alumno a ON n.id_alumno=a.id_alumno\n" +
+                                        "WHERE p.id_periodo=21 AND n.id_alumno="+rs.getString(3)+"\n" +
+                                        "GROUP BY id_nota\n" +
+                                        "ORDER BY id_nota";
+                                        sta3 = conn.getConection().createStatement();
+                                        rsa3 = sta3.executeQuery(sqla3);
+                                        if(rsa3.next())
+                                           {
+                                                for (int k = 0; k < 2; k++) {
+                                                
+  
+                                                      filas[k+j+i] = rsa3.getString(k+1);
+                                       
+                                            }
+                                           
+                                              tablaNota.addRow(filas);
+                                           }
+                                           else
+                                           {
+                                                for (int k = 0; k < 2; k++) {
+
+                                                     filas[k+j+i] ="";
+                                            }
+                                           
+                                              tablaNota.addRow(filas);
+                                           }
+                                        
+                                    }
+                                  }
+                            }
                        }
                      } 
-//                   if(f1)
-//                   {
-                       tablaNota.addRow(filas);
-//                   }
-                   
+                       //tablaNota.addRow(filas);                 
                 }
          tabla.setModel(tablaNota);         
          conn.getConection().close();
@@ -159,9 +205,27 @@ public class NotaController {
     {
          conn=new DB();
          tablaNota.setRowCount(0);
-         String sql ="SELECT id_nota,p.periodo,nota1,nota2,nota3 From nota n\n" +
-        "JOIN periodo p ON n.id_periodo=p.id_periodo\n" +
-        "WHERE id_nota="+idNotaP1+" OR id_nota="+idNotaP2+" OR id_nota="+idNotaP3;
+         String sql;
+         if(idNotaP2==0)
+         {
+             sql ="SELECT id_nota,p.periodo,nota1,nota2,nota3 From nota n\n" +
+            "JOIN periodo p ON n.id_periodo=p.id_periodo\n" +
+            "WHERE id_nota="+idNotaP1;
+         }
+         else if(idNotaP3==0)
+         {
+            sql ="SELECT id_nota,p.periodo,nota1,nota2,nota3 From nota n\n" +
+            "JOIN periodo p ON n.id_periodo=p.id_periodo\n" +
+            "WHERE id_nota="+idNotaP1+" OR id_nota="+idNotaP2;
+         }
+         else
+         {
+            sql ="SELECT id_nota,p.periodo,nota1,nota2,nota3 From nota n\n" +
+            "JOIN periodo p ON n.id_periodo=p.id_periodo\n" +
+            "WHERE id_nota="+idNotaP1+" OR id_nota="+idNotaP2+" OR id_nota="+idNotaP3;
+         }
+         
+        
         Statement st = null ;
         ResultSet rs = null ;
         String[] filas = new String[5];

@@ -5,8 +5,10 @@
  */
 package Logica_Negocio;
 
+import Datos.UsuarioGradoJpaController;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +21,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -53,6 +57,10 @@ public class UsuarioGrado implements Serializable {
 
     public UsuarioGrado(BigDecimal idUsuarioGrado) {
         this.idUsuarioGrado = idUsuarioGrado;
+    }
+        public UsuarioGrado(BigDecimal idUsuarioGrado,Grado idGrado) {
+        this.idUsuarioGrado = idUsuarioGrado;
+         this.idGrado = idGrado;
     }
 
     public BigDecimal getIdUsuarioGrado() {
@@ -101,7 +109,30 @@ public class UsuarioGrado implements Serializable {
 
     @Override
     public String toString() {
-        return  idUsuarioGrado.toString();
+        return idGrado.getGrado();
+    }
+    
+        public void ComboAlumnoProfesor(JComboBox<UsuarioGrado> cbGradoUsu,BigDecimal idProfesor)
+    {
+        try {
+             
+            cbGradoUsu.removeAllItems();
+            UsuarioGradoJpaController CMatUsu= new UsuarioGradoJpaController();
+            List<UsuarioGrado> ListcbUsuGrado = CMatUsu.findUsuarioGradoEntities();
+            for (int i = 0; i < ListcbUsuGrado.size(); i++) {
+                if(ListcbUsuGrado.get(i).getIdUsuario().getIdUsuario().equals(idProfesor) )
+                {
+                    cbGradoUsu.addItem(
+                            new UsuarioGrado(
+                            ListcbUsuGrado.get(i).getIdUsuarioGrado(),
+                            ListcbUsuGrado.get(i).getIdGrado()
+                            )     
+                    );                 
+                }
+            }
+        } catch (Exception e) {
+        }
+        
     }
     
 }

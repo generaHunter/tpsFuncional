@@ -18,6 +18,7 @@ import Logica_Negocio.Calificacion;
 import Logica_Negocio.Materia;
 import Logica_Negocio.Nota;
 import Logica_Negocio.Periodo;
+import Logica_Negocio.UsuarioGrado;
 import java.math.BigDecimal;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -36,6 +37,7 @@ public class NotasForm extends javax.swing.JFrame {
     Periodo NPeriodo=new Periodo();
     MateriaUsuario NMatusu=new MateriaUsuario();
     AlumnoProfesor NAlumPro= new AlumnoProfesor();
+    UsuarioGrado NUsuGrado=new UsuarioGrado();
     DB conn;
     NotaController CargarNota=new NotaController();
     
@@ -85,7 +87,7 @@ public class NotasForm extends javax.swing.JFrame {
         }
         NUsuario.ComboUsuario(cbProfesor);
         NPeriodo.ComboPeriodo(cbPeriodo);
-        CargarNota.Consultar(tablaNota,modeloTable);
+CargarNota.Consultar(tablaNota,modeloTable,Integer.parseInt(cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario().toString()),Integer.parseInt(cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado().toString()),Integer.parseInt(cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMateria().getIdMateria().toString()));
        // ocultarColumna();
     }
 
@@ -130,6 +132,8 @@ public class NotasForm extends javax.swing.JFrame {
         btEdit = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
+        cbGrado = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -240,10 +244,28 @@ public class NotasForm extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Brush Script MT", 1, 36)); // NOI18N
         jLabel6.setText("Notas");
 
+        cbGrado.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbGradoItemStateChanged(evt);
+            }
+        });
+
+        jLabel7.setText("Grado:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 924, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(336, 336, 336))
             .addGroup(layout.createSequentialGroup()
                 .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -252,9 +274,11 @@ public class NotasForm extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addComponent(jLabel2)
                         .addComponent(jLabel4)
-                        .addComponent(jLabel5)))
+                        .addComponent(jLabel5))
+                    .addComponent(jLabel7))
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cbGrado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtNota)
                     .addComponent(cbProfesor, 0, 108, Short.MAX_VALUE)
                     .addComponent(cbMateria, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -275,23 +299,10 @@ public class NotasForm extends javax.swing.JFrame {
                                 .addGap(120, 120, 120))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jButton1)
-                                .addGap(26, 26, 26))))))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(52, 52, 52)
-                        .addComponent(btEdit)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 924, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1))))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(336, 336, 336))
+                                .addGap(26, 26, 26))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(btEdit)
+                                .addGap(286, 286, 286))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -300,11 +311,15 @@ public class NotasForm extends javax.swing.JFrame {
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addGap(3, 3, 3)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(cbProfesor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbGrado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbMateria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btGuardar)
@@ -314,10 +329,15 @@ public class NotasForm extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(cbAlumno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cbPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
+                        .addGap(26, 26, 26))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btEdit)
+                        .addGap(4, 4, 4)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
@@ -327,9 +347,7 @@ public class NotasForm extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btEdit)
-                .addContainerGap())
+                .addGap(45, 45, 45))
         );
 
         pack();
@@ -337,6 +355,7 @@ public class NotasForm extends javax.swing.JFrame {
 
     private void cbProfesorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbProfesorItemStateChanged
         // TODO add your handling code here:
+        NUsuGrado.ComboAlumnoProfesor(cbGrado, cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario());
         NMatusu.ComboMateriaUsuario(cbMateria, cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario());
         
     }//GEN-LAST:event_cbProfesorItemStateChanged
@@ -376,11 +395,10 @@ public class NotasForm extends javax.swing.JFrame {
         NotaNueva.setNota1(Double.parseDouble(this.txtNota.getText()));
         NotaNueva.setNota2(Double.parseDouble(this.txtNota2.getText()));
         NotaNueva.setNota3(Double.parseDouble(this.txtNota3.getText()));
-        JOptionPane.showMessageDialog(null, 
-                NotaAlumno.getIdAlumno()+"alumno,materia "+NotaMateria.getIdMateria()+" usuario "+NotaUsuario.getIdUsuario());
+       
         try {
             IngresarNota.insertar_nota(NotaAlumno, NotaMateria, NotaUsuario, NotaPeriodo, NotaNueva);
-            CargarNota.Consultar(tablaNota,modeloTable);
+         CargarNota.Consultar(tablaNota,modeloTable,Integer.parseInt(cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario().toString()),Integer.parseInt(cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado().toString()),Integer.parseInt(cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMateria().getIdMateria().toString()));
            
         } catch (SQLException ex) {
             Logger.getLogger(matriculaForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -390,16 +408,32 @@ public class NotasForm extends javax.swing.JFrame {
 
     private void cbMateriaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbMateriaItemStateChanged
         // TODO add your handling code here:
-        NAlumPro.ComboAlumnoProfesor(this.cbAlumno, cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMatusu());
-        
+        NAlumPro.ComboAlumnoProfesor(this.cbAlumno, cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMatusu(),cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado());
+        CargarNota.Consultar(tablaNota,modeloTable,Integer.parseInt(cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario().toString()),Integer.parseInt(cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado().toString()),Integer.parseInt(cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMateria().getIdMateria().toString()));
     }//GEN-LAST:event_cbMateriaItemStateChanged
 
     private void tablaNotaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaNotaMouseClicked
         // TODO add your handling code here:
         int indice = this.tablaNota.getSelectedRow();
         if (indice > -1) {
-            try {               
-                CargarNota.detalleNota(this.tablaDetalleNota, Integer.parseInt(tablaNota.getValueAt(indice, 0).toString()), Integer.parseInt(tablaNota.getValueAt(indice, 6).toString()), Integer.parseInt(tablaNota.getValueAt(indice, 8).toString()),modeloTable2); 
+            try {      
+                String idNota1=tablaNota.getValueAt(indice, 0).toString();
+                String idNota2=tablaNota.getValueAt(indice, 6).toString(); 
+                String idNota3=tablaNota.getValueAt(indice, 8).toString();
+                if(idNota1.equals(""))
+                {
+                    idNota1="0";
+                }
+                if(idNota2.equals(""))
+                {
+                    idNota2="0";
+                }
+                if(idNota3.equals(""))
+                {
+                    idNota3="0";
+                }
+                
+                CargarNota.detalleNota(this.tablaDetalleNota, Integer.parseInt(idNota1), Integer.parseInt(idNota2), Integer.parseInt(idNota3),modeloTable2); 
             } 
             catch (Exception e) {
                  JOptionPane.showMessageDialog(null, e.toString());
@@ -424,13 +458,17 @@ public class NotasForm extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, ex.toString());
             }
         }
-        CargarNota.Consultar(tablaNota,modeloTable);
+        CargarNota.Consultar(tablaNota,modeloTable,Integer.parseInt(cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario().toString()),Integer.parseInt(cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado().toString()),Integer.parseInt(cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMateria().getIdMateria().toString()));  
     }//GEN-LAST:event_btEditActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         super.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void cbGradoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbGradoItemStateChanged
+      CargarNota.Consultar(tablaNota,modeloTable,Integer.parseInt(cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario().toString()),Integer.parseInt(cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado().toString()),Integer.parseInt(cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMateria().getIdMateria().toString()));
+    }//GEN-LAST:event_cbGradoItemStateChanged
 
    
     /**
@@ -472,6 +510,7 @@ public class NotasForm extends javax.swing.JFrame {
     private javax.swing.JButton btEdit;
     private javax.swing.JButton btGuardar;
     private javax.swing.JComboBox<AlumnoProfesor> cbAlumno;
+    private javax.swing.JComboBox<UsuarioGrado> cbGrado;
     private javax.swing.JComboBox<MateriaUsuario> cbMateria;
     private javax.swing.JComboBox<Periodo> cbPeriodo;
     private javax.swing.JComboBox<Usuario> cbProfesor;
@@ -482,6 +521,7 @@ public class NotasForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tablaDetalleNota;
