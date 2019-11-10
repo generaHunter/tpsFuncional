@@ -50,4 +50,31 @@ public class GenerarReportes {
     
     }
     
+       public void reporte_notasXperido(int id_alumno){
+    
+        try {
+            con = new ConexionSystem();
+            
+            JasperReport reporte = (JasperReport) JRLoader.loadObject("notasAlumno.jasper");
+            
+            Map parametros = new HashMap();
+            
+            parametros.put("id_aumnon", id_alumno);
+            
+            JasperPrint j = JasperFillManager.fillReport(reporte, parametros, con.getConnection());
+            
+            JasperViewer jv = new JasperViewer(j, false);
+            
+            jv.setTitle("Notas por periodo");
+            jv.setVisible(true);
+            
+            
+                
+        } catch (Exception e) {
+            
+            JOptionPane.showMessageDialog(null,"Error al mostrar el reporte: " + e);
+        }
+    
+    }
+    
 }
