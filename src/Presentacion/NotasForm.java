@@ -87,7 +87,7 @@ public class NotasForm extends javax.swing.JFrame {
         }
         NUsuario.ComboUsuario(cbProfesor);
         NPeriodo.ComboPeriodo(cbPeriodo);
-CargarNota.Consultar(tablaNota,modeloTable,Integer.parseInt(cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario().toString()),Integer.parseInt(cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado().toString()),Integer.parseInt(cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMateria().getIdMateria().toString()));
+        //CargarNota.Consultar(tablaNota,modeloTable,Integer.parseInt(cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario().toString()),Integer.parseInt(cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado().toString()),Integer.parseInt(cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMateria().getIdMateria().toString()));
        // ocultarColumna();
     }
 
@@ -356,7 +356,6 @@ CargarNota.Consultar(tablaNota,modeloTable,Integer.parseInt(cbProfesor.getItemAt
     private void cbProfesorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbProfesorItemStateChanged
         // TODO add your handling code here:
         NUsuGrado.ComboAlumnoProfesor(cbGrado, cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario());
-        NMatusu.ComboMateriaUsuario(cbMateria, cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario());
         
     }//GEN-LAST:event_cbProfesorItemStateChanged
 
@@ -467,7 +466,9 @@ CargarNota.Consultar(tablaNota,modeloTable,Integer.parseInt(cbProfesor.getItemAt
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void cbGradoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbGradoItemStateChanged
-      CargarNota.Consultar(tablaNota,modeloTable,Integer.parseInt(cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario().toString()),Integer.parseInt(cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado().toString()),Integer.parseInt(cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMateria().getIdMateria().toString()));
+        NMatusu.ComboMateriaUsuario(cbMateria, cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario(),cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado(),cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getGrado());
+           
+// CargarNota.Consultar(tablaNota,modeloTable,Integer.parseInt(cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario().toString()),Integer.parseInt(cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado().toString()),Integer.parseInt(cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMateria().getIdMateria().toString()));
     }//GEN-LAST:event_cbGradoItemStateChanged
 
    

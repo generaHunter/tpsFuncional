@@ -253,8 +253,6 @@ public class TipoUsuarioForm extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(null, "El campo se encuentra vacio");
         }
-     
-        
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void tableTipoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableTipoMouseClicked

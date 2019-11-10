@@ -121,7 +121,7 @@ public class UsuarioGrado implements Serializable {
             List<UsuarioGrado> ListcbUsuGrado = CMatUsu.findUsuarioGradoEntities();
             for (int i = 0; i < ListcbUsuGrado.size(); i++) {
                 if(ListcbUsuGrado.get(i).getIdUsuario().getIdUsuario().equals(idProfesor) )
-                {
+                {  
                     cbGradoUsu.addItem(
                             new UsuarioGrado(
                             ListcbUsuGrado.get(i).getIdUsuarioGrado(),

@@ -24,6 +24,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -115,14 +116,15 @@ public class MateriaUsuario implements Serializable {
         return  idMateria.getMateria();
     }
     
-        public void ComboMateriaUsuario(JComboBox<MateriaUsuario> cbMatUsu,BigDecimal idProfesor)
+        public void ComboMateriaUsuario(JComboBox<MateriaUsuario> cbMatUsu,BigDecimal idProfesor,BigDecimal idGrado,String grado)
     {
         try {
             cbMatUsu.removeAllItems();
             MateriaUsuarioJpaController CMatUsu= new MateriaUsuarioJpaController();
             List<MateriaUsuario> ListMatUsu = CMatUsu.findMateriaUsuarioEntities();
             for (int i = 0; i < ListMatUsu.size(); i++) {
-                if(ListMatUsu.get(i).idUsuario.getIdUsuario().equals(idProfesor))
+
+                if(ListMatUsu.get(i).idUsuario.getIdUsuario().equals(idProfesor) && ListMatUsu.get(i).idUsuario.getUsuarioGradoList().get(Integer.parseInt(idGrado.toString())-1).getIdGrado().getGrado().equals(grado))
                 {
                     cbMatUsu.addItem(
                             new MateriaUsuario(
@@ -130,7 +132,9 @@ public class MateriaUsuario implements Serializable {
                             ListMatUsu.get(i).idMateria,
                             ListMatUsu.get(i).idUsuario
                             )           
-                    );                 
+                    );     
+                    break;
+                   
                 }
             }
         } catch (Exception e) {
