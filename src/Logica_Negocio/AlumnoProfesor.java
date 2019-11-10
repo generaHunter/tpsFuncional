@@ -19,6 +19,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -101,18 +102,19 @@ public class AlumnoProfesor implements Serializable {
 
     @Override
     public String toString() {
-        return idMatricula.getIdAlumno().getNombre()+""+idMatricula.getIdAlumno().getApellido();
+        return idMatricula.getIdAlumno().getNombre()+" "+idMatricula.getIdAlumno().getApellido();
     }
     
-    public void ComboAlumnoProfesor(JComboBox<AlumnoProfesor> cbAlumPro,BigDecimal idMatusu)
+    public void ComboAlumnoProfesor(JComboBox<AlumnoProfesor> cbAlumPro,BigDecimal idMatusu,BigDecimal idgrado)
     {
         try {
             cbAlumPro.removeAllItems();
             AlumnoProfesorJpaController CMatUsu= new AlumnoProfesorJpaController();
             List<AlumnoProfesor> ListcbAlumPro = CMatUsu.findAlumnoProfesorEntities();
             for (int i = 0; i < ListcbAlumPro.size(); i++) {
-                if(ListcbAlumPro.get(i).getIdMatusu().getIdMatusu().equals(idMatusu))
-                {
+              
+                if(ListcbAlumPro.get(i).getIdMatusu().getIdMatusu().equals(idMatusu) && ListcbAlumPro.get(i).getIdMatricula().getIdGrado().getIdGrado().equals(idgrado) )
+                { 
                     cbAlumPro.addItem(
                             new AlumnoProfesor(
                             ListcbAlumPro.get(i).getIdAlumnoProfesor(),
