@@ -18,12 +18,16 @@ import java.util.logging.Logger;
 public class Conexion {
     
      Connection  cn = null;
+    private  String user="system";
+    private  String pass="admin";
+    private  String url="jdbc:oracle:thin:@localhost:1521:xe"; 
     public Conexion(){
      
         
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
-            cn = DriverManager.getConnection("jdbc:oracle:thin:@192.168.56.1:1521:XE", "sys as sysdba", "admin");
+            //cn = DriverManager.getConnection("jdbc:oracle:thin:@192.168.56.1:1521:XE", "sys as sysdba", "admin");
+            cn=DriverManager.getConnection(url,user,pass);
             
             if(cn != null){
             System.out.println("Conexion Exitosa");
