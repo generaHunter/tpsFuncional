@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import Datos.DB;
 import Logica_Negocio.Alumno;
 import Logica_Negocio.Calificacion;
+import Logica_Negocio.Grado;
 import Logica_Negocio.Materia;
 import Logica_Negocio.Nota;
 import Logica_Negocio.Periodo;
@@ -33,13 +34,13 @@ public class NotaController {
     DB conn;
     Conexion conR ;
             
-    public void insertar_nota(Alumno NotaAlumno,Materia NotaMateria,Usuario NotaUsuario,Periodo NotaPeriodo,Nota nota)throws SQLException
+    public void insertar_nota(Alumno NotaAlumno,Materia NotaMateria,Usuario NotaUsuario,Periodo NotaPeriodo,Nota nota,Grado grado)throws SQLException
     {
         conn=new DB();
         //conR = new Conexion();
             CallableStatement pstm;
         try {
-            pstm = conn.getConection().prepareCall("{call insertar_nota(?,?,?,?,?,?,?)}");
+            pstm = conn.getConection().prepareCall("{call insertar_nota(?,?,?,?,?,?,?,?)}");
              //pstm = conR.getConnection().prepareCall("{call insertar_nota(?,?,?,?,?,?,?)}");
                     
                         pstm.setInt(1, Integer.parseInt(NotaAlumno.getIdAlumno().toString()));
@@ -49,6 +50,7 @@ public class NotaController {
                         pstm.setDouble(5, nota.getNota1());
                         pstm.setDouble(6, nota.getNota2());
                         pstm.setDouble(7, nota.getNota3());
+                         pstm.setInt(8, Integer.parseInt(grado.getIdGrado().toString()));
                         pstm.execute();
                         
                         conn.getConection().close();

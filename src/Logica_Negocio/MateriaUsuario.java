@@ -118,7 +118,7 @@ public class MateriaUsuario implements Serializable {
 
     @Override
     public String toString() {
-        return  idMateria.getMateria();
+        return  idMateria.getMateria()+idGrado.getGrado();
     }
     
         public void ComboMateriaUsuario(JComboBox<MateriaUsuario> cbMatUsu,BigDecimal idProfesor,BigDecimal idGrado,String grado)
