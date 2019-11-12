@@ -15,6 +15,7 @@ import Datos.NotaController;
 import Logica_Negocio.Alumno;
 import Logica_Negocio.Validaciones;
 import Logica_Negocio.Calificacion;
+import Logica_Negocio.Grado;
 import Logica_Negocio.Materia;
 import Logica_Negocio.Nota;
 import Logica_Negocio.Periodo;
@@ -385,6 +386,7 @@ public class NotasForm extends javax.swing.JFrame {
         Periodo NotaPeriodo=new Periodo();
        // Calificacion NotaNueva=new Calificacion();
         Nota NotaNueva=new Nota();
+        Grado NotaGrado=new Grado();
 
         
         NotaAlumno.setIdAlumno(this.cbAlumno.getItemAt(this.cbAlumno.getSelectedIndex()).getIdMatricula().getIdAlumno().getIdAlumno());
@@ -394,9 +396,10 @@ public class NotasForm extends javax.swing.JFrame {
         NotaNueva.setNota1(Double.parseDouble(this.txtNota.getText()));
         NotaNueva.setNota2(Double.parseDouble(this.txtNota2.getText()));
         NotaNueva.setNota3(Double.parseDouble(this.txtNota3.getText()));
+        NotaGrado.setIdGrado(this.cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado());
        
         try {
-            IngresarNota.insertar_nota(NotaAlumno, NotaMateria, NotaUsuario, NotaPeriodo, NotaNueva);
+            IngresarNota.insertar_nota(NotaAlumno, NotaMateria, NotaUsuario, NotaPeriodo, NotaNueva,NotaGrado);
          CargarNota.Consultar(tablaNota,modeloTable,Integer.parseInt(cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario().toString()),Integer.parseInt(cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado().toString()),Integer.parseInt(cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMateria().getIdMateria().toString()));
            
         } catch (SQLException ex) {
