@@ -40,7 +40,7 @@ public class NotaController {
         //conR = new Conexion();
             CallableStatement pstm;
         try {
-            pstm = conn.getConection().prepareCall("{call insertar_nota(?,?,?,?,?,?,?,?)}");
+            pstm = conn.getConection().prepareCall("{call insertar_nota(?,?,?,?,?,?,?,?,?)}");
              //pstm = conR.getConnection().prepareCall("{call insertar_nota(?,?,?,?,?,?,?)}");
                     
                         pstm.setInt(1, Integer.parseInt(NotaAlumno.getIdAlumno().toString()));
@@ -50,8 +50,15 @@ public class NotaController {
                         pstm.setDouble(5, nota.getNota1());
                         pstm.setDouble(6, nota.getNota2());
                         pstm.setDouble(7, nota.getNota3());
-                         pstm.setInt(8, Integer.parseInt(grado.getIdGrado().toString()));
+                        pstm.setInt(8, Integer.parseInt(grado.getIdGrado().toString()));
+                        pstm.registerOutParameter(9, java.sql.Types.VARCHAR);
                         pstm.execute();
+                        
+                         int resultado  = pstm.getInt(9);
+                        if (resultado > 0) {
+                            JOptionPane.showMessageDialog(null, "Error: Ya se han registrado las notas para ese alumno en el periodo seleccionado.");
+                         }
+                        
                         
                         conn.getConection().close();
                          //conR.getConnection().close();
