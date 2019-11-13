@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package Presentacion;
+
 import Datos.DB;
 import Logica_Negocio.Usuario;
 import Logica_Negocio.MateriaUsuario;
@@ -23,6 +24,7 @@ import Logica_Negocio.UsuarioGrado;
 import java.math.BigDecimal;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author JoseM
@@ -34,53 +36,48 @@ public class NotasForm extends javax.swing.JFrame {
      */
     DefaultTableModel modeloTable;
     DefaultTableModel modeloTable2;
-    Usuario NUsuario=new Usuario();
-    Periodo NPeriodo=new Periodo();
-    MateriaUsuario NMatusu=new MateriaUsuario();
-    AlumnoProfesor NAlumPro= new AlumnoProfesor();
-    UsuarioGrado NUsuGrado=new UsuarioGrado();
+    Usuario NUsuario = new Usuario();
+    Periodo NPeriodo = new Periodo();
+    MateriaUsuario NMatusu = new MateriaUsuario();
+    AlumnoProfesor NAlumPro = new AlumnoProfesor();
+    UsuarioGrado NUsuGrado = new UsuarioGrado();
     DB conn;
-    NotaController CargarNota=new NotaController();
-    
+    NotaController CargarNota = new NotaController();
+
     public NotasForm() {
         initComponents();
-         this.setLocationRelativeTo(null);
+        this.setLocationRelativeTo(null);
         modeloTable = (DefaultTableModel) this.tablaNota.getModel();
-       // modeloTable2 = (DefaultTableModel) this.tablaDetalleNota.getModel();
-        modeloTable2=new DefaultTableModel(
-         new Object [][] {
-
-            },
-            new String [] {
-                "idNota", "Periodo", "Nota", "Nota", "Nota"
-            }
+        // modeloTable2 = (DefaultTableModel) this.tablaDetalleNota.getModel();
+        modeloTable2 = new DefaultTableModel(
+                new Object[][]{},
+                new String[]{
+                    "idNota", "Periodo", "Nota", "Nota", "Nota"
+                }
         ) {
-            boolean[] canEdit = new boolean [] {
+            boolean[] canEdit = new boolean[]{
                 false, false, true, true, true
             };
+
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
+
             @Override
-            public void setValueAt(Object value,int row,int column)
-            {
-                if(column>=2 && column<=4)
-                {
-                  
-                        if(Validaciones.Double(value.toString(), 0.00, 10.00))
-                        {
-                            super.setValueAt(value, row, column);
-                        }
-                        else
-                        {
-                            JOptionPane.showMessageDialog(null, "Solo se permiten números desde 0.00 hasta 10.00");
-                        }
+            public void setValueAt(Object value, int row, int column) {
+                if (column >= 2 && column <= 4) {
+
+                    if (Validaciones.Double(value.toString(), 0.00, 10.00)) {
+                        super.setValueAt(value, row, column);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Solo se permiten números desde 0.00 hasta 10.00");
+                    }
                 }
             }
         };
         this.tablaDetalleNota.setModel(modeloTable2);
-         jScrollPane1.setViewportView(tablaDetalleNota);
+        jScrollPane1.setViewportView(tablaDetalleNota);
         if (tablaDetalleNota.getColumnModel().getColumnCount() > 0) {
             tablaDetalleNota.getColumnModel().getColumn(0).setMinWidth(0);
             tablaDetalleNota.getColumnModel().getColumn(0).setPreferredWidth(0);
@@ -89,21 +86,21 @@ public class NotasForm extends javax.swing.JFrame {
         NUsuario.ComboUsuario(cbProfesor);
         NPeriodo.ComboPeriodo(cbPeriodo);
         //CargarNota.Consultar(tablaNota,modeloTable,Integer.parseInt(cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario().toString()),Integer.parseInt(cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado().toString()),Integer.parseInt(cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMateria().getIdMateria().toString()));
-       // ocultarColumna();
+        // ocultarColumna();
     }
 
-    public void ocultarColumna()
-    {
-       tablaNota.getColumnModel().getColumn(0).setMaxWidth(0);
-       tablaNota.getColumnModel().getColumn(0).setMinWidth(0);
-       tablaNota.getColumnModel().getColumn(0).setPreferredWidth(0);
-       tablaNota.getColumnModel().getColumn(5).setMaxWidth(0);
-       tablaNota.getColumnModel().getColumn(5).setMinWidth(0);
-       tablaNota.getColumnModel().getColumn(5).setPreferredWidth(0);
-       tablaNota.getColumnModel().getColumn(7).setMaxWidth(0);
-       tablaNota.getColumnModel().getColumn(7).setMinWidth(0);
-       tablaNota.getColumnModel().getColumn(7).setPreferredWidth(0);
+    public void ocultarColumna() {
+        tablaNota.getColumnModel().getColumn(0).setMaxWidth(0);
+        tablaNota.getColumnModel().getColumn(0).setMinWidth(0);
+        tablaNota.getColumnModel().getColumn(0).setPreferredWidth(0);
+        tablaNota.getColumnModel().getColumn(5).setMaxWidth(0);
+        tablaNota.getColumnModel().getColumn(5).setMinWidth(0);
+        tablaNota.getColumnModel().getColumn(5).setPreferredWidth(0);
+        tablaNota.getColumnModel().getColumn(7).setMaxWidth(0);
+        tablaNota.getColumnModel().getColumn(7).setMinWidth(0);
+        tablaNota.getColumnModel().getColumn(7).setPreferredWidth(0);
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -165,6 +162,12 @@ public class NotasForm extends javax.swing.JFrame {
         });
 
         jLabel4.setText("Periodo:");
+
+        txtNota.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNotaKeyTyped(evt);
+            }
+        });
 
         jLabel5.setText("Nota:");
 
@@ -357,110 +360,102 @@ public class NotasForm extends javax.swing.JFrame {
     private void cbProfesorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbProfesorItemStateChanged
         // TODO add your handling code here:
         NUsuGrado.ComboAlumnoProfesor(cbGrado, cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario());
-        
+
     }//GEN-LAST:event_cbProfesorItemStateChanged
 
     private void btGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGuardarActionPerformed
         // TODO add your handling code here:
-//            conn=new DB();
-//            CallableStatement pstm;
-//        try {
-//            pstm = conn.getConection().prepareCall("{call insertar_nota(?,?,?,?,?)}");
-//                    
-//                pstm.setInt(1, 1);
-//                pstm.setInt(2, 62);
-//                pstm.setInt(3, 262);
-//                pstm.setString(4, "Primero");
-//                pstm.setDouble(5, 9.95);
-//                pstm.execute();
-//                conn.getConection().close();
-//    } catch (SQLException ex) {
-//            Logger.getLogger(NotasForm.class.getName()).log(Level.SEVERE, null, ex);
-//            
-//        }
 
-        NotaController IngresarNota=new NotaController();
-        Alumno NotaAlumno= new Alumno();
-        Materia NotaMateria=new Materia();
-        Usuario NotaUsuario=new Usuario();
-        Periodo NotaPeriodo=new Periodo();
-       // Calificacion NotaNueva=new Calificacion();
-        Nota NotaNueva=new Nota();
-        Grado NotaGrado=new Grado();
-
-        
-        NotaAlumno.setIdAlumno(this.cbAlumno.getItemAt(this.cbAlumno.getSelectedIndex()).getIdMatricula().getIdAlumno().getIdAlumno());
-        NotaMateria.setIdMateria(this.cbMateria.getItemAt(this.cbMateria.getSelectedIndex()).getIdMateria().getIdMateria());
-        NotaUsuario.setIdUsuario(this.cbProfesor.getItemAt(this.cbProfesor.getSelectedIndex()).getIdUsuario());
-        NotaPeriodo.setPeriodo(this.cbPeriodo.getItemAt(this.cbPeriodo.getSelectedIndex()).getPeriodo());
-        NotaNueva.setNota1(Double.parseDouble(this.txtNota.getText()));
-        NotaNueva.setNota2(Double.parseDouble(this.txtNota2.getText()));
-        NotaNueva.setNota3(Double.parseDouble(this.txtNota3.getText()));
-        NotaGrado.setIdGrado(this.cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado());
-       
-        try {
-            IngresarNota.insertar_nota(NotaAlumno, NotaMateria, NotaUsuario, NotaPeriodo, NotaNueva,NotaGrado);
-         CargarNota.Consultar(tablaNota,modeloTable,Integer.parseInt(cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario().toString()),Integer.parseInt(cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado().toString()),Integer.parseInt(cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMateria().getIdMateria().toString()));
-           
-        } catch (SQLException ex) {
-            Logger.getLogger(matriculaForm.class.getName()).log(Level.SEVERE, null, ex);
+        if(this.txtNota.getText().isEmpty() ||this.txtNota2.getText().isEmpty()||this.txtNota3.getText().isEmpty() )
+        {
+            JOptionPane.showMessageDialog(rootPane, "Error por favor ingrese las 3 notas.");
         }
-       
+        else
+        {
+            if(Double.parseDouble(this.txtNota.getText())<=10.00 || Double.parseDouble(this.txtNota2.getText())<=10.00 || Double.parseDouble(this.txtNota3.getText())<=10.00)
+            {
+                NotaController IngresarNota = new NotaController();
+                Alumno NotaAlumno = new Alumno();
+                Materia NotaMateria = new Materia();
+                Usuario NotaUsuario = new Usuario();
+                Periodo NotaPeriodo = new Periodo();
+                // Calificacion NotaNueva=new Calificacion();
+                Nota NotaNueva = new Nota();
+                Grado NotaGrado = new Grado();
+
+                NotaAlumno.setIdAlumno(this.cbAlumno.getItemAt(this.cbAlumno.getSelectedIndex()).getIdMatricula().getIdAlumno().getIdAlumno());
+                NotaMateria.setIdMateria(this.cbMateria.getItemAt(this.cbMateria.getSelectedIndex()).getIdMateria().getIdMateria());
+                NotaUsuario.setIdUsuario(this.cbProfesor.getItemAt(this.cbProfesor.getSelectedIndex()).getIdUsuario());
+                NotaPeriodo.setPeriodo(this.cbPeriodo.getItemAt(this.cbPeriodo.getSelectedIndex()).getPeriodo());
+                NotaNueva.setNota1(Double.parseDouble(this.txtNota.getText()));
+                NotaNueva.setNota2(Double.parseDouble(this.txtNota2.getText()));
+                NotaNueva.setNota3(Double.parseDouble(this.txtNota3.getText()));
+                NotaGrado.setIdGrado(this.cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado());
+
+                try {
+                    IngresarNota.insertar_nota(NotaAlumno, NotaMateria, NotaUsuario, NotaPeriodo, NotaNueva, NotaGrado);
+                    CargarNota.Consultar(tablaNota, modeloTable, Integer.parseInt(cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario().toString()), Integer.parseInt(cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado().toString()), Integer.parseInt(cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMateria().getIdMateria().toString()));
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(matriculaForm.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(rootPane, "Error las notas deben estar entre 0.00 y 10.00.");
+            }
+        }
     }//GEN-LAST:event_btGuardarActionPerformed
 
     private void cbMateriaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbMateriaItemStateChanged
         // TODO add your handling code here:
-        NAlumPro.ComboAlumnoProfesor(this.cbAlumno, cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMatusu(),cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado());
-        CargarNota.Consultar(tablaNota,modeloTable,Integer.parseInt(cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario().toString()),Integer.parseInt(cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado().toString()),Integer.parseInt(cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMateria().getIdMateria().toString()));
+        NAlumPro.ComboAlumnoProfesor(this.cbAlumno, cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMatusu(), cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado());
+        CargarNota.Consultar(tablaNota, modeloTable, Integer.parseInt(cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario().toString()), Integer.parseInt(cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado().toString()), Integer.parseInt(cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMateria().getIdMateria().toString()));
     }//GEN-LAST:event_cbMateriaItemStateChanged
 
     private void tablaNotaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaNotaMouseClicked
         // TODO add your handling code here:
         int indice = this.tablaNota.getSelectedRow();
         if (indice > -1) {
-            try {      
-                String idNota1=tablaNota.getValueAt(indice, 0).toString();
-                String idNota2=tablaNota.getValueAt(indice, 6).toString(); 
-                String idNota3=tablaNota.getValueAt(indice, 8).toString();
-                if(idNota1.equals(""))
-                {
-                    idNota1="0";
+            try {
+                String idNota1 = tablaNota.getValueAt(indice, 0).toString();
+                String idNota2 = tablaNota.getValueAt(indice, 6).toString();
+                String idNota3 = tablaNota.getValueAt(indice, 8).toString();
+                if (idNota1.equals("")) {
+                    idNota1 = "0";
                 }
-                if(idNota2.equals(""))
-                {
-                    idNota2="0";
+                if (idNota2.equals("")) {
+                    idNota2 = "0";
                 }
-                if(idNota3.equals(""))
-                {
-                    idNota3="0";
+                if (idNota3.equals("")) {
+                    idNota3 = "0";
                 }
-                
-                CargarNota.detalleNota(this.tablaDetalleNota, Integer.parseInt(idNota1), Integer.parseInt(idNota2), Integer.parseInt(idNota3),modeloTable2); 
-            } 
-            catch (Exception e) {
-                 JOptionPane.showMessageDialog(null, e.toString());
+
+                CargarNota.detalleNota(this.tablaDetalleNota, Integer.parseInt(idNota1), Integer.parseInt(idNota2), Integer.parseInt(idNota3), modeloTable2);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e.toString());
             }
         }
     }//GEN-LAST:event_tablaNotaMouseClicked
 
     private void btEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditActionPerformed
         // TODO add your handling code here:
-       
-        for (int i = 0; i <=this.tablaDetalleNota.getRowCount()-1; i++) {
+
+        for (int i = 0; i <= this.tablaDetalleNota.getRowCount() - 1; i++) {
             try {
-                Nota NotaEdit=new Nota();
-                BigDecimal bigDecimalValue = new BigDecimal(this.tablaDetalleNota.getValueAt(i,0).toString());
+                Nota NotaEdit = new Nota();
+                BigDecimal bigDecimalValue = new BigDecimal(this.tablaDetalleNota.getValueAt(i, 0).toString());
                 NotaEdit.setIdNota(bigDecimalValue);
-                NotaEdit.setNota1(Double.parseDouble(this.tablaDetalleNota.getValueAt(i,2).toString()));
-                NotaEdit.setNota2(Double.parseDouble(this.tablaDetalleNota.getValueAt(i,3).toString()));
-                NotaEdit.setNota3(Double.parseDouble(this.tablaDetalleNota.getValueAt(i,4).toString()));
+                NotaEdit.setNota1(Double.parseDouble(this.tablaDetalleNota.getValueAt(i, 2).toString()));
+                NotaEdit.setNota2(Double.parseDouble(this.tablaDetalleNota.getValueAt(i, 3).toString()));
+                NotaEdit.setNota3(Double.parseDouble(this.tablaDetalleNota.getValueAt(i, 4).toString()));
                 CargarNota.EditarNota(NotaEdit);
-            } catch ( Exception ex) {
+            } catch (Exception ex) {
                 //Logger.getLogger(NotasForm.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(null, ex.toString());
             }
         }
-        CargarNota.Consultar(tablaNota,modeloTable,Integer.parseInt(cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario().toString()),Integer.parseInt(cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado().toString()),Integer.parseInt(cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMateria().getIdMateria().toString()));  
+        CargarNota.Consultar(tablaNota, modeloTable, Integer.parseInt(cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario().toString()), Integer.parseInt(cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado().toString()), Integer.parseInt(cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMateria().getIdMateria().toString()));
     }//GEN-LAST:event_btEditActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -469,12 +464,29 @@ public class NotasForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void cbGradoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbGradoItemStateChanged
-        NMatusu.ComboMateriaUsuario(cbMateria, cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario(),cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado(),cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getGrado());
-           
+        NMatusu.ComboMateriaUsuario(cbMateria, cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario(), cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado(), cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getGrado());
+
 // CargarNota.Consultar(tablaNota,modeloTable,Integer.parseInt(cbProfesor.getItemAt(cbProfesor.getSelectedIndex()).getIdUsuario().toString()),Integer.parseInt(cbGrado.getItemAt(cbGrado.getSelectedIndex()).getIdGrado().getIdGrado().toString()),Integer.parseInt(cbMateria.getItemAt(cbMateria.getSelectedIndex()).getIdMateria().getIdMateria().toString()));
     }//GEN-LAST:event_cbGradoItemStateChanged
 
-   
+    public void validarNota(javax.swing.JTextField txt,java.awt.event.KeyEvent evt)
+    {
+         if (!Character.isDigit(evt.getKeyChar()) && evt.getKeyChar() != '.' ) {
+             // JOptionPane.showMessageDialog(rootPane, "Solo se permiten números.");
+            evt.consume();
+        }
+
+        if (evt.getKeyChar() == '.' && txt.getText().contains(".")) {
+              JOptionPane.showMessageDialog(rootPane, "Error ya ha ingresado un punto decimal.");
+            evt.consume();
+        }
+      
+    }
+    private void txtNotaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNotaKeyTyped
+        // TODO add your handling code here:
+        this.validarNota(this.txtNota, evt);
+    }//GEN-LAST:event_txtNotaKeyTyped
+
     /**
      * @param args the command line arguments
      */
@@ -515,7 +527,7 @@ public class NotasForm extends javax.swing.JFrame {
     private javax.swing.JButton btGuardar;
     private javax.swing.JComboBox<AlumnoProfesor> cbAlumno;
     private javax.swing.JComboBox<UsuarioGrado> cbGrado;
-    private javax.swing.JComboBox<MateriaUsuario> cbMateria;
+    private javax.swing.JComboBox<Logica_Negocio.MateriaUsuario> cbMateria;
     private javax.swing.JComboBox<Periodo> cbPeriodo;
     private javax.swing.JComboBox<Usuario> cbProfesor;
     private javax.swing.JButton jButton1;
